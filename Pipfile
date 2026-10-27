@@ -15,6 +15,7 @@ python-dateutil = "*"
 python-dotenv = "*"
 email-validator = "*"
 pytest = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 

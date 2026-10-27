@@ -2,6 +2,7 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
@@ -26,3 +27,5 @@ db = SQLAlchemy(metadata=metadata)
 db.init_app(app)
 
 migrate = Migrate(app, db)
+
+bcrypt = Bcrypt(app)
