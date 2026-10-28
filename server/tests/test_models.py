@@ -1,6 +1,6 @@
 """Day 1 Block C: columns, relationships, and password handling.
 
-Validations live in one file per model: test_user_validations.py, test_budget_validations.py, ...
+Validations live in one file per model: test_<model>_validations.py.
 """
 
 import ast
