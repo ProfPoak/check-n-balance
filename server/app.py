@@ -1,5 +1,6 @@
 from config import app
 from api.home import home_bp
+import models
 
 app.register_blueprint(home_bp)
 
