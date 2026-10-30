@@ -15,6 +15,7 @@ import pytest
 
 from config import app, db
 import models  # noqa: F401  (registers every table before create_all)
+import app as app_module  # noqa: F401  (registers every blueprint)
 
 
 @pytest.fixture(autouse=True)
@@ -26,3 +27,9 @@ def session():
         db.session.rollback()
         db.session.remove()
         db.drop_all()
+
+
+@pytest.fixture
+def client():
+    """Flask test client; keeps the session cookie between requests."""
+    return app.test_client()
