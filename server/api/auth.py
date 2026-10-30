@@ -14,14 +14,44 @@ api = Api(auth_bp)
 
 class Signup(Resource):
     def post(self):
-        """201 + user and log in; 422 {"errors": {field: [...]}} for bad input or a duplicate email."""
-        pass
+        try:
+            data = UserSchema().load(request.get_json())
+        except ValidationError as e:
+            return {"errors": e.messages}, 422
 
+        user = User()
+        errors = {}
+        for field in ("email", "password"):
+            try:
+                setattr(user, field, data[field])
+            except ValueError as e:
+                errors[field] = [str(e)]
+        if errors:
+            return {"errors": errors}, 422
+
+        db.session.add(user)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return {"errors": {"email": ["An account is already associated with this email address. Please log in or use a different email."]}}, 422
+
+        session["user_id"] = user.id
+        return UserSchema().dump(user), 201
 
 class Login(Resource):
     def post(self):
-        """200 + user and log in; 401 {"error": "Invalid email or password"} otherwise."""
-        pass
+        data = request.get_json()
+        email, password = data.get("email"), data.get("password")
+        if not email or not password:
+            return {"error": "Invalid email or password"}, 401
+
+        user = User.query.filter_by(email=email.strip().lower()).first()
+        if not user or not user.authenticate(password):
+            return {"error": "Invalid email or password"}, 401
+
+        session["user_id"] = user.id
+        return UserSchema().dump(user), 200
 
 
 class CheckSession(Resource):
