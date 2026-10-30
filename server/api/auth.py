@@ -56,14 +56,16 @@ class Login(Resource):
 
 class CheckSession(Resource):
     def get(self):
-        """200 + user, or 401 {"error": ...}."""
-        pass
+        user = current_user()
+        if not user:
+            return {"error": "Not logged in"}, 401
+        return UserSchema().dump(user), 200
 
 
 class Logout(Resource):
     def delete(self):
-        """204, session cleared (even when nobody is logged in)."""
-        pass
+        session.pop("user_id", None)
+        return {}, 204
 
 
 api.add_resource(Signup, "/signup")
