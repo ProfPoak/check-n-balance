@@ -2,5 +2,9 @@ from marshmallow import EXCLUDE, Schema, fields
 
 
 class UserSchema(Schema):
-    """Dumps {id, email}; loads email and password (password is load_only)."""
-    pass
+    class Meta:
+        unknown = EXCLUDE
+
+    id = fields.Integer(dump_only=True)
+    email = fields.String(required=True)
+    password = fields.String(required=True, load_only=True)
