@@ -1,4 +1,5 @@
 from flask import session
+from marshmallow import ValidationError
 
 from config import db
 from models import Budget, User
@@ -23,3 +24,19 @@ def get_owned(model, id):
     if owner_id != current_user().id:
         return None, ({"error": "Forbidden"}, 403)
     return obj, None
+
+def apply_fields(obj, body, schema):
+    try:
+        data = schema.load(body)
+    except ValidationError as e:
+        return {"errors": e.messages}, 422
+    errors = {}
+    for key, value in data.items():
+        try:
+            setattr(obj, key, value)
+        except ValueError as e:
+            errors[key] = [str(e)]
+    if errors:
+        db.session.rollback()
+        return {"errors": errors}, 422
+    return None
