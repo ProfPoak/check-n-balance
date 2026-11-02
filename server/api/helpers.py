@@ -48,4 +48,4 @@ def merged_body(obj, schema):
     return body
 
 def save_error(name):
-    return {"errors": {name: ["Could not save this {name}"]}}, 422
+    return {"errors": {name: [f"Could not save this {name}"]}}, 422
