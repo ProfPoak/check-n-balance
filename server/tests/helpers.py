@@ -44,6 +44,12 @@ def make_asset(session, budget, name="Checking"):
     return asset
 
 
+def fresh(session, obj):
+    """Re-read obj from the database (routes commit in their own session)."""
+    session.expire_all()
+    return session.get(type(obj), obj.id)
+
+
 def column(model, name):
     return model.__table__.columns[name]
 
