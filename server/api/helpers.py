@@ -1,7 +1,8 @@
 from flask import session
+from marshmallow import ValidationError
 
 from config import db
-from models import User
+from models import Budget, User
 
 
 def current_user():
@@ -9,3 +10,33 @@ def current_user():
     if user_id is None:
         return None
     return db.session.get(User, user_id)
+
+def require_login():
+    if current_user() is None:
+        return {"error": "Not logged in"}, 401
+    return
+
+def get_owned(model, id):
+    obj = model.query.filter_by(id=id).first()
+    if obj is None:
+        return None, ({"error": f"{model.__name__} not found"}, 404)
+    owner_id = obj.user_id if isinstance(obj, Budget) else obj.budget.user_id
+    if owner_id != current_user().id:
+        return None, ({"error": "Forbidden"}, 403)
+    return obj, None
+
+def apply_fields(obj, body, schema):
+    try:
+        data = schema.load(body)
+    except ValidationError as e:
+        return {"errors": e.messages}, 422
+    errors = {}
+    for key, value in data.items():
+        try:
+            setattr(obj, key, value)
+        except ValueError as e:
+            errors[key] = [str(e)]
+    if errors:
+        db.session.rollback()
+        return {"errors": errors}, 422
+    return None

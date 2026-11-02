@@ -16,6 +16,7 @@ import pytest
 from config import app, db
 import models  # noqa: F401  (registers every table before create_all)
 import app as app_module  # noqa: F401  (registers every blueprint)
+from helpers import make_user
 
 
 @pytest.fixture(autouse=True)
@@ -33,3 +34,31 @@ def session():
 def client():
     """Flask test client; keeps the session cookie between requests."""
     return app.test_client()
+
+
+def logged_in_client(user):
+    """A test client whose session already holds this user's id (skips the login route)."""
+    c = app.test_client()
+    with c.session_transaction() as s:
+        s["user_id"] = user.id
+    return c
+
+
+@pytest.fixture
+def user_a(session):
+    return make_user(session, email="a@example.com")
+
+
+@pytest.fixture
+def user_b(session):
+    return make_user(session, email="b@example.com")
+
+
+@pytest.fixture
+def client_a(user_a):
+    return logged_in_client(user_a)
+
+
+@pytest.fixture
+def client_b(user_b):
+    return logged_in_client(user_b)
