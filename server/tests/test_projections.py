@@ -80,6 +80,24 @@ class TestAccess:
         assert resp.status_code == 200
 
 
+# ---------- error shape: {"errors": {param: [messages]}} ----------
+
+@pytest.mark.parametrize("endpoint, param, params", [
+    ("timeline", "start", {"start": "nope"}),
+    ("timeline", "start", {"start": "1899-12-31"}),
+    ("timeline", "end", {"start": "2026-11-02", "end": "2026-11-01"}),
+    ("monthly", "start", {"start": "nope"}),
+    ("monthly", "start", {"start": "1899-12"}),
+    ("monthly", "months", {"months": "abc"}),
+    ("monthly", "months", {"months": "0"}),
+])
+def test_param_errors_are_lists_of_messages(client_a, budget, endpoint, param, params):
+    resp = client_a.get(f"/budgets/{budget.id}/{endpoint}", query_string=params)
+    assert resp.status_code == 422
+    messages = resp.get_json()["errors"][param]
+    assert isinstance(messages, list) and messages
+
+
 # ---------- GET /budgets/<id>/timeline ----------
 
 class TestTimeline:
