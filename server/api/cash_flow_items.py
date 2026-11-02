@@ -21,7 +21,7 @@ class BudgetCashFlowItems(Resource):
         
         item = CashFlowItem()
         schema = CashFlowItemSchema()
-        err = apply_fields(item, merged_body(item, schema), schema)
+        err = apply_fields(item, request.get_json(), schema)
         if err:
             return err
 
