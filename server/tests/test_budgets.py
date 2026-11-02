@@ -1,20 +1,15 @@
 """Budget routes (api/budgets.py): CRUD, login required, ownership checks."""
 
+import json
 from datetime import date
 
 import pytest
 
-from helpers import make_asset, make_budget, make_item
+from helpers import fresh, make_asset, make_budget, make_item
 from models import Asset, Budget, CashFlowItem
 
 LIST_KEYS = {"id", "title", "description", "balance_as_of"}
 FULL_KEYS = LIST_KEYS | {"cash_flow_items", "assets"}
-
-
-def fresh(session, obj):
-    """Re-read obj from the database (routes commit in their own session)."""
-    session.expire_all()
-    return session.get(type(obj), obj.id)
 
 
 # ---------- login required ----------
@@ -191,6 +186,14 @@ class TestUpdate:
         budget = fresh(session, budget)
         assert budget.title == "Current"
         assert budget.description == "Real numbers"
+
+    @pytest.mark.parametrize("body", [[1], "text", 5, None])
+    def test_body_that_is_not_an_object_is_422(self, client_a, session, user_a, body):
+        budget = make_budget(session, user_a)
+        resp = client_a.patch(f"/budgets/{budget.id}", data=json.dumps(body), content_type="application/json")
+        assert resp.status_code == 422
+        assert "errors" in resp.get_json()
+        assert fresh(session, budget).title == "Current"
 
     def test_missing_is_404(self, client_a):
         assert client_a.patch("/budgets/9999", json={"title": "X"}).status_code == 404
