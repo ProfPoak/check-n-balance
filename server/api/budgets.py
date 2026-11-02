@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from config import db
 from models import Budget
 from schemas import BudgetSchema
-from .helpers import apply_fields, current_user, get_owned, require_login
+from .helpers import apply_fields, current_user, get_owned, require_login, merged_body
 
 budgets_bp = Blueprint("budgets", __name__)
 budgets_bp.before_request(require_login)
@@ -48,7 +48,7 @@ class BudgetById(Resource):
             return err
 
         schema = BudgetSchema()
-        err = apply_fields(budget, {**schema.dump(budget), **request.get_json()}, schema)
+        err = apply_fields(budget, merged_body(budget, schema), schema)
         if err:
             return err
 

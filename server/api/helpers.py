@@ -1,4 +1,4 @@
-from flask import session
+from flask import session, request
 from marshmallow import ValidationError
 
 from config import db
@@ -40,3 +40,9 @@ def apply_fields(obj, body, schema):
         db.session.rollback()
         return {"errors": errors}, 422
     return None
+
+def merged_body(obj, schema):
+    body = request.get_json()
+    if isinstance(body, dict):
+        return {**schema.dump(obj), **body}
+    return body

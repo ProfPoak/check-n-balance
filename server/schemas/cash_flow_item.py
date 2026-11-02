@@ -16,7 +16,7 @@ class CashFlowItemSchema(Schema):
                             validate=validate.Range(min=0, max=Decimal("100000000"), min_inclusive=False, max_inclusive=False))
     start_date = fields.Date(required=True)
     end_date= fields.Date(allow_none=True)
-    interval = fields.Integer(allow_none=True, validate=validate.Range(min=1))
+    interval = fields.Integer(allow_none=True, validate=validate.Range(min=1, max=999))
     unit = fields.String(required=True, validate=validate.OneOf(UNITS))
 
     @validates_schema
