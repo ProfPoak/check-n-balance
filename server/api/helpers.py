@@ -46,3 +46,6 @@ def merged_body(obj, schema):
     if isinstance(body, dict):
         return {**schema.dump(obj), **body}
     return body
+
+def save_error(name):
+    return {"errors": {name: ["Could not save this {name}"]}}, 422
