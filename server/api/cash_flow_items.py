@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
-from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError
 
 from config import db
@@ -47,7 +46,6 @@ class CashFlowItemById(Resource):
         if err:
             return err
 
-        db.session.add(item)
         try:
             db.session.commit()
         except IntegrityError:
