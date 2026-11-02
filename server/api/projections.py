@@ -64,12 +64,41 @@ def months_param(name, default):
 
 class Timeline(Resource):
     def get(self, id):
-        pass
+        budget, err = get_owned(Budget, id)
+        if err:
+            return err
+
+        first, last = default_window()
+        try:
+            start = date_param("start", first)
+            end = date_param("end", last)
+        except ValidationError as e:
+            return {"errors": e.messages}, 422
+
+        if end < start:
+            return {"errors": {"end": ["end must be on or after start"]}}, 422
+
+        entries = build_timeline(budget.cash_flow_items, start, end)
+        return TimelineEntrySchema(many=True).dump(entries), 200
 
 
 class Monthly(Resource):
     def get(self, id):
-        pass
+        budget, err = get_owned(Budget, id)
+        if err:
+            return err
+
+        first, _ = default_window()
+        try:
+            start = month_param("start", first)
+            months = months_param("months", 6)
+        except ValidationError as e:
+            return {"errors": e.messages}, 422
+
+        end = start + relativedelta(months=months, days=-1)
+        entries = build_timeline(budget.cash_flow_items, start, end)
+        rows = monthly_totals(entries, start, months)
+        return MonthlyRowSchema(many=True).dump(rows), 200
 
 
 api.add_resource(Timeline, "/budgets/<int:id>/timeline")
