@@ -13,10 +13,13 @@ os.environ["DATABASE_URL"] = _test_url
 
 import pytest
 
-from config import app, db
+from config import app, bcrypt, db
 import models  # noqa: F401  (registers every table before create_all)
 import app as app_module  # noqa: F401  (registers every blueprint)
 from helpers import make_user
+
+# Minimum bcrypt cost, for tests only: hashing at the app's 12 rounds dominates the suite's run time
+bcrypt._log_rounds = 4
 
 
 @pytest.fixture(autouse=True)
