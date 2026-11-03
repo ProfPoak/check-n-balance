@@ -42,8 +42,16 @@ class Signup(Resource):
 class Login(Resource):
     def post(self):
         data = request.get_json()
+
+        if not isinstance(data, dict):
+            return {"error": "Invalid email or password"}, 401
+
         email, password = data.get("email"), data.get("password")
-        if not email or not password:
+        
+        if not isinstance(email, str) or not isinstance(password, str):
+            return {"error": "Invalid email or password"}, 401
+
+        if len(password.encode()) > 72:
             return {"error": "Invalid email or password"}, 401
 
         user = User.query.filter_by(email=email.strip().lower()).first()
