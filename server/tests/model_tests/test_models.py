@@ -15,7 +15,7 @@ from sqlalchemy.exc import IntegrityError
 from helpers import column, fk_target, make_asset, make_budget, make_item, make_user
 from models import Asset, Budget, CashFlowItem, User
 
-MODELS_DIR = pathlib.Path(__file__).resolve().parent.parent / "models"
+MODELS_DIR = pathlib.Path(__file__).resolve().parents[2] / "models"
 
 
 # --- Package layout -------------------------------------------------------

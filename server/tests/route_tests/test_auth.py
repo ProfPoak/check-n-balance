@@ -120,6 +120,46 @@ class TestLogin:
         assert resp.get_json() == INVALID
 
 
+class TestLoginBadShapes:
+    """Anything that isn't a proper login is the usual 401, never a 500."""
+
+    @pytest.mark.parametrize("body", ["[]", '["a@example.com"]', '"text"', "5", "null", "true"])
+    def test_body_that_is_not_an_object_is_401(self, client, session, body):
+        make_user(session)
+        resp = client.post("/login", data=body, content_type="application/json")
+        assert resp.status_code == 401
+        assert resp.get_json() == INVALID
+
+    @pytest.mark.parametrize("email", [123, True, ["pat@example.com"], {"a": 1}])
+    def test_non_string_email_is_401(self, client, session, email):
+        make_user(session)
+        resp = client.post("/login", json={"email": email, "password": PASSWORD})
+        assert resp.status_code == 401
+        assert resp.get_json() == INVALID
+
+    @pytest.mark.parametrize("password", [12345678, True, [PASSWORD], {"a": 1}])
+    def test_non_string_password_is_401(self, client, session, password):
+        make_user(session)
+        resp = client.post("/login", json={"email": "pat@example.com", "password": password})
+        assert resp.status_code == 401
+        assert resp.get_json() == INVALID
+
+    def test_password_over_the_bcrypt_limit_is_401(self, client, session):
+        make_user(session)
+        resp = client.post("/login", json={"email": "pat@example.com", "password": "x" * 73})
+        assert resp.status_code == 401
+        assert resp.get_json() == INVALID
+
+    def test_password_at_the_bcrypt_limit_can_log_in(self, client, session):
+        make_user(session, password="x" * 72)
+        assert login(client, password="x" * 72).status_code == 200
+
+    def test_bad_shape_does_not_log_in(self, client, session):
+        make_user(session)
+        client.post("/login", json={"email": ["pat@example.com"], "password": PASSWORD})
+        assert client.get("/check_session").status_code == 401
+
+
 # ---------- GET /check_session ----------
 
 class TestCheckSession:
