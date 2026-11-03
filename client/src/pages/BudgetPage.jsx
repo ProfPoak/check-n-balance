@@ -1,7 +1,9 @@
 import { useParams } from 'react-router-dom'
 
 function BudgetPage() {
-  return null
+  const { id } = useParams()
+
+  return <h1>Budget {id}</h1>
 }
 
 export default BudgetPage
