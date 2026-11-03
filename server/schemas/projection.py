@@ -13,3 +13,13 @@ class MonthlyRowSchema(Schema):
     income = fields.Decimal(places=2, as_string=True)
     expenses = fields.Decimal(places=2, as_string=True)
     net = fields.Decimal(places=2, as_string=True)
+
+
+class ProjectionSchema(Schema):
+    as_of = fields.Date()
+    to = fields.Date()
+    starting_balance = fields.Decimal(places=2, as_string=True)
+    income = fields.Decimal(places=2, as_string=True)
+    expenses = fields.Decimal(places=2, as_string=True)
+    net = fields.Decimal(places=2, as_string=True)
+    projected_balance = fields.Decimal(places=2, as_string=True)
