@@ -3,6 +3,8 @@
 from datetime import date
 from decimal import Decimal
 
+from dateutil.relativedelta import relativedelta
+
 from models import Asset, Budget, CashFlowItem, User
 
 
@@ -42,6 +44,27 @@ def make_asset(session, budget, name="Checking"):
     session.add(asset)
     session.commit()
     return asset
+
+
+def add_item(session, budget, name="Item", kind="expense", amount="100.00",
+             start=date(2026, 11, 10), end=None, interval=None, unit="once"):
+    item = CashFlowItem(budget=budget, kind=kind, name=name, amount=Decimal(amount),
+                        start_date=start, end_date=end, interval=interval, unit=unit)
+    session.add(item)
+    session.commit()
+    return item
+
+
+def add_asset(session, budget, name="Checking", balance="1000.00"):
+    asset = Asset(budget=budget, name=name, balance=Decimal(balance))
+    session.add(asset)
+    session.commit()
+    return asset
+
+
+def default_window():
+    first = date.today().replace(day=1)
+    return first, first + relativedelta(months=6, days=-1)
 
 
 def fresh(session, obj):
