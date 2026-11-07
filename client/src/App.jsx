@@ -1,5 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
+import GuestRoute from './components/GuestRoute.jsx'
 import Layout from './components/Layout.jsx'
+import ProtectedRoute from './components/ProtectedRoute.jsx'
 import BudgetPage from './pages/BudgetPage.jsx'
 import HomePage from './pages/HomePage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
