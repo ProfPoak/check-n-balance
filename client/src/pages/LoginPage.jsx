@@ -1,5 +1,14 @@
+import { Link } from 'react-router-dom'
+import LoginForm from '../components/LoginForm.jsx'
+
 function LoginPage() {
-  return <h1>Login</h1>
+  return( 
+    <div>
+      <h1>Login</h1>
+      <LoginForm />
+      <p>No account? <Link to="/signup">Sign Up</Link></p>
+    </div>
+  )
 }
 
 export default LoginPage
