@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiFetch } from '../../api.js'
 import BudgetHeader from './BudgetHeader.jsx'
+import CashFlowItemsPanel from './CashFlowItemsPanel.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
 
 function Panel({ id, title, children }) {
