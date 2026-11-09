@@ -20,6 +20,8 @@ function BudgetView({ id }) {
   const [assets, setAssets] = useState([])
   const [error, setError] = useState(null)
   const [budgets, setBudgets] = useState(null)
+  const [headerError, setHeaderError] = useState(null)
+  const navigate = useNavigate()
 
   // The selector's list
   useEffect(() => {
@@ -53,6 +55,20 @@ function BudgetView({ id }) {
     }
   }, [id])
 
+  async function handleDelete() {
+    if (!window.confirm('Delete this budget?')) {
+      return
+    }
+    setHeaderError(null)
+    const res = await apiFetch(`/budgets/${id}`, { method: 'DELETE' })
+    if (res.ok) {
+      navigate('/')
+    }
+    else {
+      setHeaderError(res.data ?? {})
+    }
+  }
+
   if (error) {
     return (
       <>  
@@ -69,6 +85,8 @@ function BudgetView({ id }) {
       <header>
         <h1>{budget.title}</h1>
         {budgets && <BudgetSelector budgets={budgets} currentId={id} />}
+        <button onClick={handleDelete}>Delete budget</button>
+        <ErrorMessage data={headerError} />
       </header>
 
       <div>
