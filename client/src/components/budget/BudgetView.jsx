@@ -3,16 +3,8 @@ import { Link } from 'react-router-dom'
 import { apiFetch } from '../../api.js'
 import BudgetHeader from './BudgetHeader.jsx'
 import CashFlowItemsPanel from './CashFlowItemsPanel.jsx'
+import Panel from './Panel.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
-
-function Panel({ id, title, children }) {
-  return (
-    <section aria-labelledby={id}>
-      <h2 id={id}>{title}</h2>
-      {children}
-    </section>
-  )
-}
 
 function BudgetView({ id }) {
   const [budget, setBudget] = useState(null)
@@ -39,6 +31,18 @@ function BudgetView({ id }) {
     }
   }, [id])
 
+  function addItem(item) {
+    setItems((list) => [...list, item])
+  }
+
+  function replaceItem(item) {
+    setItems((list) => list.map((i) => (i.id === item.id ? item : i)))
+  }
+
+  function removeItem(itemId) {
+    setItems((list) => list.filter((i) => i.id !== itemId))
+  }
+
   if (error) {
     return (
       <>
@@ -56,7 +60,13 @@ function BudgetView({ id }) {
 
       <div>
         <div>
-          <Panel id="cash-flow-items" title="Cash flow items" />
+          <CashFlowItemsPanel
+            budgetId={budget.id}
+            items={items}
+            onAdd={addItem}
+            onReplace={replaceItem}
+            onRemove={removeItem}
+          />
         </div>
 
         <div>
