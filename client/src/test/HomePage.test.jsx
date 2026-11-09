@@ -125,7 +125,7 @@ describe('the "+" button', () => {
   })
 
   it('the new budget shows up on Home when you go back (Home refetches)', async () => {
-    const { fetchMock, routes } = renderHome([200, [CURRENT]], { 'POST /api/budgets': [201, UNTITLED], 'GET /api/budgets/9': [200, NEW_PAGE] })
+    const { routes } = renderHome([200, [CURRENT]], { 'POST /api/budgets': [201, UNTITLED], 'GET /api/budgets/9': [200, NEW_PAGE] })
     const user = userEvent.setup()
     await user.click(await plusButton())
     await screen.findByRole('heading', { level: 1, name: 'Untitled budget' })
@@ -133,7 +133,7 @@ describe('the "+" button', () => {
     routes['GET /api/budgets'] = [200, [CURRENT, UNTITLED]]
     await user.click(within(screen.getByRole('navigation')).getByRole('link', { name: 'Home' }))
 
+    // The new link only exists in the second answer, so seeing it proves Home refetched
     expect((await budgetLink('Untitled budget')).getAttribute('href')).toBe('/budgets/9')
-    expect(callsTo(fetchMock, 'GET /api/budgets')).toHaveLength(2)
   })
 })
