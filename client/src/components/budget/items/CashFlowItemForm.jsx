@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { PRESETS, recurrenceLabel } from '../../utils/recurrence.js'
-import ErrorMessage from '../shared/ErrorMessage.jsx'
+import { PRESETS, recurrenceLabel } from '../../../utils/recurrence.js'
+import ErrorMessage from '../../shared/ErrorMessage.jsx'
 
 const MONTHLY = '1-month'
 

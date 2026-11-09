@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiFetch } from '../../api.js'
-import AssetsPanel from './AssetsPanel.jsx'
-import BudgetHeader from './BudgetHeader.jsx'
-import CashFlowItemsPanel from './CashFlowItemsPanel.jsx'
+import AssetsPanel from './assets/AssetsPanel.jsx'
+import BudgetHeader from './header/BudgetHeader.jsx'
+import CashFlowItemsPanel from './items/CashFlowItemsPanel.jsx'
 import Panel from './Panel.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
 

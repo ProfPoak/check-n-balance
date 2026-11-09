@@ -1,7 +1,7 @@
-import { apiFetch } from '../../api.js'
+import { apiFetch } from '../../../api.js'
 import CashFlowItemForm from './CashFlowItemForm.jsx'
 import CashFlowItemRow from './CashFlowItemRow.jsx'
-import Panel from './Panel.jsx'
+import Panel from '../Panel.jsx'
 
 function CashFlowItemsPanel({ budgetId, items, onAdd, onReplace, onRemove }) {
   // Returns the apiFetch result so the form can clear itself or show the error

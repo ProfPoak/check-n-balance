@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { apiFetch } from '../../api.js'
-import ErrorMessage from '../shared/ErrorMessage.jsx'
+import { apiFetch } from '../../../api.js'
+import ErrorMessage from '../../shared/ErrorMessage.jsx'
 
 function BudgetEditForm({ budget, onSaved, onCancel }) {
   const [title, setTitle] = useState(budget.title)
