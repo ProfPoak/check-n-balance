@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { apiFetch } from '../api.js'
-import BudgetEditForm from './BudgetEditForm.jsx'
-import BudgetSelector from './BudgetSelector.jsx'
+import BudgetHeader from './BudgetHeader.jsx'
 import ErrorMessage from './ErrorMessage.jsx'
 
 function Panel({ id, title, children }) {
@@ -19,23 +18,6 @@ function BudgetView({ id }) {
   const [items, setItems] = useState([])
   const [assets, setAssets] = useState([])
   const [error, setError] = useState(null)
-  const [budgets, setBudgets] = useState(null)
-  const [headerError, setHeaderError] = useState(null)
-  const [editing, setEditing] = useState(false)
-  const navigate = useNavigate()
-
-  // The selector's list
-  useEffect(() => {
-    let ignore = false
-    apiFetch('/budgets').then(res => {
-      if (!ignore && res.ok) {
-        setBudgets(res.data)
-      }
-    })
-    return () => {
-      ignore = true
-    }
-  }, [])
 
   useEffect(() => {
     let ignore = false
@@ -51,37 +33,14 @@ function BudgetView({ id }) {
         setError(res.data ?? {})
       }
     })
-    return () => { 
+    return () => {
       ignore = true
     }
   }, [id])
 
-  function handleSaved(data) {
-    const { cash_flow_items, assets: budgetAssets, ...budgetFields } = data
-    setBudget(budgetFields)
-    setItems(cash_flow_items)
-    setAssets(budgetAssets)
-    setBudgets((list) => list && list.map((b) => (b.id === budgetFields.id ? { ...b, title: budgetFields.title } : b)))
-    setEditing(false)
-  }
-
-  async function handleDelete() {
-    if (!window.confirm('Delete this budget?')) {
-      return
-    }
-    setHeaderError(null)
-    const res = await apiFetch(`/budgets/${id}`, { method: 'DELETE' })
-    if (res.ok) {
-      navigate('/')
-    }
-    else {
-      setHeaderError(res.data ?? {})
-    }
-  }
-
   if (error) {
     return (
-      <>  
+      <>
         <ErrorMessage data={error} />
         <Link to="/">Back to Home</Link>
       </>
@@ -92,17 +51,7 @@ function BudgetView({ id }) {
 
   return (
     <div>
-      <header>
-        <h1>{budget.title}</h1>
-        {budgets && <BudgetSelector budgets={budgets} currentId={id} />}
-        {editing ? (
-          <BudgetEditForm budget={budget} onSaved={handleSaved} onCancel={() => setEditing(false)} />
-        ) : (
-          <button onClick={() => setEditing(true)}>Edit budget</button>
-        )}
-        <button onClick={handleDelete}>Delete budget</button>
-        <ErrorMessage data={headerError} />
-      </header>
+      <BudgetHeader budget={budget} onBudgetChange={setBudget} />
 
       <div>
         <div>
