@@ -44,6 +44,18 @@ function BudgetView({ id }) {
     setItems((list) => list.filter((i) => i.id !== itemId))
   }
 
+  function addAsset(asset) {
+    setAssets((list) => [...list, asset])
+  }
+
+  function replaceAsset(asset) {
+    setAssets((list) => list.map((a) => (a.id === asset.id ? asset : a)))
+  }
+
+  function removeAsset(assetId) {
+    setAssets((list) => list.filter((a) => a.id !== assetId))
+  }
+
   if (error) {
     return (
       <>
@@ -80,7 +92,13 @@ function BudgetView({ id }) {
           <Panel id="monthly-cash-flow" title="Monthly cash flow">
             <p>Day 8</p>
           </Panel>
-          <Panel id="projected-asset-value" title="Projected asset value" />
+          <AssetsPanel
+            budgetId={budget.id}
+            assets={assets}
+            onAdd={addAsset}
+            onReplace={replaceAsset}
+            onRemove={removeAsset}
+          />
         </div>
       </div>
     </div>
