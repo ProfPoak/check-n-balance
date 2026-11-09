@@ -21,6 +21,7 @@ function BudgetView({ id }) {
   const [error, setError] = useState(null)
   const [budgets, setBudgets] = useState(null)
   const [headerError, setHeaderError] = useState(null)
+  const [editing, setEditing] = useState(false)
   const navigate = useNavigate()
 
   // The selector's list
@@ -55,6 +56,15 @@ function BudgetView({ id }) {
     }
   }, [id])
 
+  function handleSaved(data) {
+    const { cash_flow_items, assets: budgetAssets, ...budgetFields } = data
+    setBudget(budgetFields)
+    setItems(cash_flow_items)
+    setAssets(budgetAssets)
+    setBudgets((list) => list && list.map((b) => (b.id === budgetFields.id ? { ...b, title: budgetFields.title } : b)))
+    setEditing(false)
+  }
+
   async function handleDelete() {
     if (!window.confirm('Delete this budget?')) {
       return
@@ -85,6 +95,11 @@ function BudgetView({ id }) {
       <header>
         <h1>{budget.title}</h1>
         {budgets && <BudgetSelector budgets={budgets} currentId={id} />}
+        {editing ? (
+          <BudgetEditForm budget={budget} onSaved={handleSaved} onCancel={() => setEditing(false)} />
+        ) : (
+          <button onClick={() => setEditing(true)}>Edit budget</button>
+        )}
         <button onClick={handleDelete}>Delete budget</button>
         <ErrorMessage data={headerError} />
       </header>
