@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../api.js'
+import { apiFetch } from '../../api.js'
 import BudgetEditForm from './BudgetEditForm.jsx'
 import BudgetSelector from './BudgetSelector.jsx'
-import ErrorMessage from './ErrorMessage.jsx'
+import ErrorMessage from '../shared/ErrorMessage.jsx'
 
 function BudgetHeader({ budget, onBudgetChange }) {
   const [budgets, setBudgets] = useState(null)

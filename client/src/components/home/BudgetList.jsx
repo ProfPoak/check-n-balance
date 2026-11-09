@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { formatDate } from '../utils/format.js'
+import { formatDate } from '../../utils/format.js'
 
 function BudgetList({ budgets }) {
   if (budgets.length === 0) {
