@@ -19,6 +19,20 @@ function BudgetView({ id }) {
   const [items, setItems] = useState([])
   const [assets, setAssets] = useState([])
   const [error, setError] = useState(null)
+  const [budgets, setBudgets] = useState(null)
+
+  // The selector's list
+  useEffect(() => {
+    let ignore = false
+    apiFetch('/budgets').then(res => {
+      if (!ignore && res.ok) {
+        setBudgets(res.data)
+      }
+    })
+    return () => {
+      ignore = true
+    }
+  }, [])
 
   useEffect(() => {
     let ignore = false
@@ -54,6 +68,7 @@ function BudgetView({ id }) {
     <div>
       <header>
         <h1>{budget.title}</h1>
+        {budgets && <BudgetSelector budgets={budgets} currentId={id} />}
       </header>
 
       <div>
