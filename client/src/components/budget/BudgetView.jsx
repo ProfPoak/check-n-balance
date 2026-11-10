@@ -89,14 +89,22 @@ function BudgetView({ id }) {
 
   function addAsset(asset) {
     setAssets((list) => [...list, asset])
+    refresh()
   }
 
   function replaceAsset(asset) {
     setAssets((list) => list.map((a) => (a.id === asset.id ? asset : a)))
+    refresh()
   }
 
   function removeAsset(assetId) {
     setAssets((list) => list.filter((a) => a.id !== assetId))
+    refresh()
+  }
+
+  function changeBudget(next) {
+    setBudget(next)
+    refresh()
   }
 
   if (error) {
@@ -112,7 +120,7 @@ function BudgetView({ id }) {
 
   return (
     <div>
-      <BudgetHeader budget={budget} onBudgetChange={setBudget} />
+      <BudgetHeader budget={budget} onBudgetChange={changeBudget} />
       <SummaryBar monthly={monthly} />
 
       <div>
@@ -138,6 +146,7 @@ function BudgetView({ id }) {
             onAdd={addAsset}
             onReplace={replaceAsset}
             onRemove={removeAsset}
+            version={version}
           />
         </div>
       </div>

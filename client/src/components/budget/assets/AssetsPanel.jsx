@@ -2,8 +2,9 @@ import { apiFetch } from '../../../api.js'
 import AssetForm from './AssetForm.jsx'
 import AssetRow from './AssetRow.jsx'
 import Panel from '../Panel.jsx'
+import ProjectionForm from './ProjectionForm.jsx'
 
-function AssetsPanel({ budgetId, assets, onAdd, onReplace, onRemove }) {
+function AssetsPanel({ budgetId, assets, onAdd, onReplace, onRemove, version }) {
   async function handleAdd(body) {
     const res = await apiFetch(`/budgets/${budgetId}/assets`, { method: 'POST', body })
     if (res.ok) {
@@ -25,6 +26,7 @@ function AssetsPanel({ budgetId, assets, onAdd, onReplace, onRemove }) {
           ))}
         </ul>
       )}
+      <ProjectionForm key={version} budgetId={budgetId} />
     </Panel>
   )
 }
