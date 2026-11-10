@@ -92,7 +92,7 @@ describe('the list', () => {
     await loaded('Current')
     const text = rowText('Rent')
     expect(text).toContain('Expense')
-    expect(text).toContain('$1450.00')
+    expect(text).toContain('$1,450.00')
     expect(text).toContain('Monthly')
     expect(text).toContain(formatDate('2026-01-01'))
   })
@@ -281,7 +281,7 @@ describe('editing an item', () => {
     await user.click(form.getByRole('button', { name: 'Cancel' }))
 
     expect(panel().queryByRole('button', { name: 'Save' })).toBeNull()
-    expect(rowText('Rent')).toContain('$1450.00')
+    expect(rowText('Rent')).toContain('$1,450.00')
     expect(callsTo(fetchMock, 'PATCH /api/cash_flow_items/2')).toHaveLength(0)
   })
 
@@ -293,7 +293,7 @@ describe('editing an item', () => {
     await user.click(form.getByRole('button', { name: 'Save' }))
 
     await waitFor(() => expect(panel().queryByRole('button', { name: 'Save' })).toBeNull())
-    expect(rowText('Rent')).toContain('$1500.00')
+    expect(rowText('Rent')).toContain('$1,500.00')
     const patches = callsTo(fetchMock, 'PATCH /api/cash_flow_items/2')
     expect(patches).toHaveLength(1)
     expect(bodyOf(patches[0])).toEqual({

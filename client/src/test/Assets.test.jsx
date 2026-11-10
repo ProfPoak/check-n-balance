@@ -59,18 +59,18 @@ describe('the list', () => {
     expect(panel().getByText('No assets yet')).toBeTruthy()
   })
 
-  it('shows each asset with its name and $balance', async () => {
+  it('shows each asset with its name and formatted balance', async () => {
     renderAt('/budgets/1')
     await loaded('Current')
     expect(panel().queryByText('No assets yet')).toBeNull()
-    expect(rowText('Checking')).toContain('$2500.00')
-    expect(rowText('Savings')).toContain('$8000.00')
+    expect(rowText('Checking')).toContain('$2,500.00')
+    expect(rowText('Savings')).toContain('$8,000.00')
   })
 
-  it('shows a negative balance with its minus sign', async () => {
+  it('shows a negative balance as -$1,200.00', async () => {
     renderAt('/budgets/8')
     await loaded('Untitled budget')
-    expect(rowText('Car loan')).toMatch(/-\$?1200\.00/)
+    expect(rowText('Car loan')).toContain('-$1,200.00')
   })
 
   it('keeps assets out of the Cash flow items panel', async () => {
@@ -108,7 +108,7 @@ describe('the add form', () => {
     await user.click(addForm().getByRole('button', { name: 'Add asset' }))
 
     await panel().findByRole('button', { name: 'Edit Brokerage' })
-    expect(rowText('Brokerage')).toContain('$3000.00')
+    expect(rowText('Brokerage')).toContain('$3,000.00')
     expect(panel().queryByText('No assets yet')).toBeNull()
     expect(addForm().getByLabelText('Name').value).toBe('')
     expect(addForm().getByLabelText('Balance').value).toBe('')
@@ -172,7 +172,7 @@ describe('editing an asset', () => {
     await user.click(form.getByRole('button', { name: 'Cancel' }))
 
     expect(panel().queryByRole('button', { name: 'Save' })).toBeNull()
-    expect(rowText('Checking')).toContain('$2500.00')
+    expect(rowText('Checking')).toContain('$2,500.00')
     expect(callsTo(fetchMock, 'PATCH /api/assets/1')).toHaveLength(0)
   })
 
@@ -184,8 +184,8 @@ describe('editing an asset', () => {
     await user.click(form.getByRole('button', { name: 'Save' }))
 
     await waitFor(() => expect(panel().queryByRole('button', { name: 'Save' })).toBeNull())
-    expect(rowText('Checking')).toContain('$2750.00')
-    expect(rowText('Savings')).toContain('$8000.00')
+    expect(rowText('Checking')).toContain('$2,750.00')
+    expect(rowText('Savings')).toContain('$8,000.00')
     const patches = callsTo(fetchMock, 'PATCH /api/assets/1')
     expect(patches).toHaveLength(1)
     expect(bodyOf(patches[0])).toEqual({ name: 'Checking', balance: '2750' })
