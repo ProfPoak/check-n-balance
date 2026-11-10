@@ -4,7 +4,9 @@ import { apiFetch } from '../../api.js'
 import AssetsPanel from './assets/AssetsPanel.jsx'
 import BudgetHeader from './header/BudgetHeader.jsx'
 import CashFlowItemsPanel from './items/CashFlowItemsPanel.jsx'
+import MonthlyPanel from './monthly/MonthlyPanel.jsx'
 import Panel from './Panel.jsx'
+import SummaryBar from './SummaryBar.jsx'
 import TimelinePanel from './timeline/TimelinePanel.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
 
@@ -16,6 +18,7 @@ function BudgetView({ id }) {
   const [timeline, setTimeline] = useState(null)
   const [timelineError, setTimelineError] = useState(null)
   const [monthly, setMonthly] = useState(null)
+  const [monthlyError, setMonthlyError] = useState(null)
   const [version, setVersion] = useState(0)
 
   useEffect(() => {
@@ -51,8 +54,13 @@ function BudgetView({ id }) {
     })
 
     apiFetch(`/budgets/${id}/monthly`).then(res => {
-      if (!ignore && res.ok) {
+      if (ignore) return
+      if (res.ok) {
         setMonthly(res.data)
+        setMonthlyError(null)
+      }
+      else {
+        setMonthlyError(res.data ?? {})
       }
     })
 
@@ -106,6 +114,7 @@ function BudgetView({ id }) {
   return (
     <div>
       <BudgetHeader budget={budget} onBudgetChange={setBudget} />
+      <SummaryBar monthly={monthly} />
 
       <div>
         <div>
@@ -123,9 +132,7 @@ function BudgetView({ id }) {
         </div>
 
         <div>
-          <Panel id="monthly-cash-flow" title="Monthly cash flow">
-            <p>Day 8</p>
-          </Panel>
+          <MonthlyPanel monthly={monthly} error={monthlyError} />
           <AssetsPanel
             budgetId={budget.id}
             assets={assets}
