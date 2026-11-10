@@ -4,13 +4,14 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
-import { CURRENT, summary, UNTITLED, WHAT_IF } from './fixtures.js'
+import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from './fixtures.js'
 import { callsTo, DEMO, mockFetch } from './mockFetch.js'
 
 // The whole app at `path`, logged in, with the demo's three budgets
 function renderAt(path, routes = {}) {
   const allRoutes = {
     'GET /api/check_session': [200, DEMO],
+    ...scheduleRoutes(1, 2, 9),
     'GET /api/budgets': [200, [CURRENT, WHAT_IF, UNTITLED].map(summary)],
     'GET /api/budgets/1': [200, CURRENT],
     'GET /api/budgets/2': [200, WHAT_IF],

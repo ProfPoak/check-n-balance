@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
-import { CURRENT } from './fixtures.js'
+import { CURRENT, scheduleRoutes } from './fixtures.js'
 import { DEMO, mockFetch } from './mockFetch.js'
 
 const LOGGED_OUT = [401, { error: 'Not logged in' }]
@@ -20,6 +20,7 @@ function renderAt(path, session) {
     'GET /api/check_session': session,
     'GET /api/budgets': [200, []],
     'GET /api/budgets/1': [200, CURRENT],
+    ...scheduleRoutes(1),
   }
   mockFetch(routes)
   render(

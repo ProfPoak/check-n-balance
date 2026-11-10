@@ -44,3 +44,41 @@ export const UNTITLED = {
 
 // The GET /budgets list form (no items or assets)
 export const summary = ({ id, title, description, balance_as_of }) => ({ id, title, description, balance_as_of })
+
+// ---- Day 8: what /timeline and /monthly send ----
+
+// The server's 6-month window (this month + the next 5). The client never builds these.
+export const MONTHS = ['2026-11', '2026-12', '2027-01', '2027-02', '2027-03', '2027-04']
+
+// One GET /budgets/:id/timeline entry for an item on a date
+export const entry = ({ id, name, kind, amount }, date) => ({ item_id: id, name, kind, amount, date })
+
+// GET /budgets/:id/monthly for a budget with nothing in the window
+export const emptyMonthly = () => MONTHS.map((month) => ({ month, income: '0.00', expenses: '0.00', net: '0.00' }))
+
+const [PAYCHECK, RENT, CAR, , VET] = CURRENT.cash_flow_items
+
+// "Current" for Nov–Dec, sorted by date then name, as the server sends it
+export const CURRENT_TIMELINE = [
+  entry(RENT, '2026-11-01'),
+  entry(PAYCHECK, '2026-11-06'),
+  entry(CAR, '2026-11-15'),
+  entry(PAYCHECK, '2026-11-20'),
+  entry(RENT, '2026-12-01'),
+  entry(PAYCHECK, '2026-12-04'),
+  entry(VET, '2026-12-10'),
+  entry(CAR, '2026-12-15'),
+  entry(PAYCHECK, '2026-12-18'),
+]
+
+export const WHAT_IF_TIMELINE = [entry(WHAT_IF.cash_flow_items[0], '2026-12-01')]
+
+// Empty /timeline and /monthly answers for each budget id, for tests that don't look at them
+export function scheduleRoutes(...ids) {
+  const routes = {}
+  for (const id of ids) {
+    routes[`GET /api/budgets/${id}/timeline`] = [200, []]
+    routes[`GET /api/budgets/${id}/monthly`] = [200, emptyMonthly()]
+  }
+  return routes
+}

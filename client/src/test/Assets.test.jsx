@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
-import { CURRENT, summary, UNTITLED, WHAT_IF } from './fixtures.js'
+import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from './fixtures.js'
 import { callsTo, DEMO, mockFetch } from './mockFetch.js'
 
 // A loan is an asset with a negative balance
@@ -17,6 +17,7 @@ const WITH_LOAN = {
 function renderAt(path, routes = {}) {
   const allRoutes = {
     'GET /api/check_session': [200, DEMO],
+    ...scheduleRoutes(1, 8, 9),
     'GET /api/budgets': [200, [CURRENT, WHAT_IF, UNTITLED].map(summary)],
     'GET /api/budgets/1': [200, CURRENT],
     'GET /api/budgets/8': [200, WITH_LOAN],

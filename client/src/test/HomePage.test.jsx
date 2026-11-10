@@ -5,6 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
 import { callsTo, DEMO, mockFetch } from './mockFetch.js'
+import { scheduleRoutes } from './fixtures.js'
 
 // A US time zone, so `new Date("2026-11-07")` (midnight UTC) would show as Nov 6
 globalThis.process.env.TZ = 'America/Denver'
@@ -24,6 +25,7 @@ function renderHome(budgets, extraRoutes = {}) {
   const routes = {
     'GET /api/check_session': [200, DEMO],
     'GET /api/budgets': budgets,
+    ...scheduleRoutes(9),
     ...extraRoutes,
   }
   const fetchMock = mockFetch(routes)

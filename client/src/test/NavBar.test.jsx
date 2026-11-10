@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
-import { CURRENT } from './fixtures.js'
+import { CURRENT, scheduleRoutes } from './fixtures.js'
 import { callsTo, DEMO, mockFetch } from './mockFetch.js'
 
 const LOGGED_OUT = [401, { error: 'Not logged in' }]
@@ -13,7 +13,7 @@ const HOME = /^(Home|Welcome, demo@example\.com)$/
 
 // The NavBar is tested inside the real App, so its links and logout redirect are real
 function renderAt(path, routes) {
-  const fetchMock = mockFetch({ 'GET /api/budgets': [200, []], 'GET /api/budgets/1': [200, CURRENT], ...routes })
+  const fetchMock = mockFetch({ 'GET /api/budgets': [200, []], 'GET /api/budgets/1': [200, CURRENT], ...scheduleRoutes(1), ...routes })
   render(
     <MemoryRouter initialEntries={[path]}>
       <AuthProvider>

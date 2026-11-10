@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import App from '../App.jsx'
 import { AuthProvider } from '../context/AuthContext.jsx'
 import { formatDate } from '../utils/format.js'
-import { CURRENT, summary, UNTITLED, WHAT_IF } from './fixtures.js'
+import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from './fixtures.js'
 import { callsTo, DEMO, mockFetch } from './mockFetch.js'
 
 // A US time zone, so a UTC date bug would show the day before
@@ -21,6 +21,7 @@ const CUSTOM = {
 function renderAt(path, routes = {}) {
   const allRoutes = {
     'GET /api/check_session': [200, DEMO],
+    ...scheduleRoutes(1, 2, 7, 9),
     'GET /api/budgets': [200, [CURRENT, WHAT_IF, UNTITLED].map(summary)],
     'GET /api/budgets/1': [200, CURRENT],
     'GET /api/budgets/2': [200, WHAT_IF],
