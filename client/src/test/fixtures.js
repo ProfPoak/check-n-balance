@@ -82,3 +82,27 @@ export function scheduleRoutes(...ids) {
   }
   return routes
 }
+
+// One GET /budgets/:id/monthly row. Net is income - expenses, as the server sends it.
+export const monthRow = (month, income, expenses) => ({
+  month,
+  income,
+  expenses,
+  net: (Number(income) - Number(expenses)).toFixed(2),
+})
+
+// "Current": Nov 2430 → Dec 2030 (down) → Jan 4530 (up) → Feb 2430 (down) → Mar 1470 (down) → Apr 1470 (same)
+export const CURRENT_MONTHLY = [
+  monthRow('2026-11', '4200.00', '1770.00'),
+  monthRow('2026-12', '4200.00', '2170.00'),
+  monthRow('2027-01', '6300.00', '1770.00'),
+  monthRow('2027-02', '4200.00', '1770.00'),
+  monthRow('2027-03', '4200.00', '2730.00'),
+  monthRow('2027-04', '4200.00', '2730.00'),
+]
+
+// "New car what-if": nothing in Nov, then only the car payment, so Net goes negative
+export const WHAT_IF_MONTHLY = [
+  monthRow('2026-11', '0.00', '0.00'),
+  ...MONTHS.slice(1).map((m) => monthRow(m, '0.00', '540.00')),
+]

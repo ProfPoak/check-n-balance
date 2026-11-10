@@ -39,11 +39,11 @@ function BudgetView({ id }) {
 
   useEffect(() => {
     let ignore = false
-    setTimelineError(null)
     apiFetch(`/budgets/${id}/timeline`).then(res => {
       if (ignore) return
       if (res.ok) {
         setTimeline(res.data)
+        setTimelineError(null)
       }
       else {
         setTimelineError(res.data ?? {})
