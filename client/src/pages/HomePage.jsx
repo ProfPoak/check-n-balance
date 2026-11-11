@@ -54,10 +54,10 @@ function HomePage() {
         so you can see where your money is headed.
       </p>
 
-      <div className={styles.newRow}>
-        <button id="new-budget" className={styles.newButton} aria-label="New budget" onClick={handleNew} disabled={creating}>+</button>
-        <label htmlFor="new-budget" className={styles.newLabel}>Start new budget</label>
-      </div>
+      <button className={styles.newButton} onClick={handleNew} disabled={creating}>
+        Start new budget
+        <span className={styles.plus} aria-hidden="true"></span>
+      </button>
       <ErrorMessage data={error} />
 
       {budgets ? (

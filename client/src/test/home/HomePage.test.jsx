@@ -39,7 +39,7 @@ function renderHome(budgets, extraRoutes = {}) {
   return { fetchMock, routes }
 }
 
-const plusButton = () => screen.findByRole('button', { name: 'New budget' })
+const plusButton = () => screen.findByRole('button', { name: 'Start new budget' })
 const budgetLink = (title) => screen.findByRole('link', { name: new RegExp(title) })
 
 afterEach(() => {

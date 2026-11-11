@@ -11,37 +11,21 @@
   color: var(--color-muted);
 }
 
-/* The "+" (New budget) button: a round accent button.
-   The "+" character sits off-center in most fonts, so it's hidden
-   (font-size: 0; still in the HTML) and drawn as two bars instead. */
+/* "Start new budget" button: one blue pill, with the plus drawn
+   in a lighter circle at its right end (the span is decorative only). */
 .newButton {
-  position: relative;
-  width: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   height: 36px;
-  padding: 0;
-  border-radius: 50%;
+  padding: 0 var(--space-1) 0 var(--space-4);
+  border-radius: 18px;
   border-color: var(--color-accent);
   background: var(--color-accent);
-  font-size: 0;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
   box-shadow: var(--shadow);
-}
-
-.newButton::before,
-.newButton::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 14px;
-  height: 2px;
-  border-radius: 1px;
-  background: #ffffff;
-  transform: translate(-50%, -50%);
-}
-
-/* The vertical bar */
-.newButton::after {
-  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .newButton:hover:not(:disabled) {
@@ -49,25 +33,34 @@
   background: var(--color-accent-hover);
 }
 
+/* The plus: two white bars centered in a 28px circle.
+   Drawn with CSS because a "+" character sits off-center in most fonts. */
+.plus {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.plus::before,
+.plus::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 2px;
+  border-radius: 1px;
+  background: #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+/* The vertical bar */
+.plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
 .loading {
   color: var(--color-muted);
-}
-
-/* "+" and its "Start new budget" label on one row.
-   The label points at the button (htmlFor), so clicking the words clicks the button. */
-.newRow {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}
-
-.newLabel {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-accent);
-  cursor: pointer;
-}
-
-.newLabel:hover {
-  color: var(--color-accent-hover);
 }
