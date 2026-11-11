@@ -22,12 +22,13 @@
 
 /* Add items (left) · Timeline (center) · Monthly + Assets (right).
    The two side columns always match, so the timeline sits in the middle.
-   Shares are 1 : 1.2 : 1, and the sides never drop below 340px so the
-   item form and the 5-column monthly table have room. */
+   Shares are 1 : 1.2 : 1, and the sides never drop below 380px: measured
+   in Chrome, the monthly table needs ~346px with five-digit amounts, plus
+   the panel's 32px of side padding. */
 .grid {
   display: grid;
   flex: 1;
-  grid-template-columns: minmax(340px, 1fr) minmax(0, 1.2fr) minmax(340px, 1fr);
+  grid-template-columns: minmax(380px, 1fr) minmax(0, 1.2fr) minmax(380px, 1fr);
   /* One row that fills the rest of the page and never grows past it */
   grid-template-rows: minmax(0, 1fr);
   min-height: 0;
@@ -47,9 +48,10 @@
   border-right: none;
 }
 
-/* Narrow windows: one column, in reading order, ruled between.
-   The page grows with its content and <main> scrolls it as one. */
-@media (max-width: 900px) {
+/* Narrower windows: one column, in reading order, ruled between.
+   The page grows with its content and <main> scrolls it as one.
+   1100px = two 380px sides + a usable ~340px timeline. */
+@media (max-width: 1100px) {
   .page {
     flex: none;
   }

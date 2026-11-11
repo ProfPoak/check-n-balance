@@ -1,7 +1,10 @@
 /* A budget page panel: flat, no card. A small uppercase heading with a
    rule under it (like the wireframe), and a rule between stacked panels. */
 .panel {
-  padding-bottom: var(--space-4);
+  /* The side gutter is padding, not margins on the children:
+     children that are width: 100% (like the monthly table) then fit
+     inside it instead of overflowing by the margin. */
+  padding: 0 var(--space-4) var(--space-4);
 }
 
 .panel + .panel {
@@ -16,7 +19,9 @@
   top: 0;
   z-index: 1;
   background: var(--color-surface);
-  margin: 0 0 var(--space-3);
+  /* Negative side margins pull the heading (and its rule) out
+     across the panel's padding, so it still runs edge to edge */
+  margin: 0 calc(-1 * var(--space-4)) var(--space-3);
   padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--color-rule);
   font-size: 0.75rem;
@@ -26,14 +31,9 @@
   color: var(--color-text);
 }
 
-/* Everything under the heading gets the same side gutter */
-.panel > :not(.heading) {
-  margin-left: var(--space-4);
-  margin-right: var(--space-4);
-}
-
-/* Narrow windows scroll as one page, so headings don't stick */
-@media (max-width: 900px) {
+/* Narrower windows scroll as one page, so headings don't stick
+   (same breakpoint as BudgetView.module.css) */
+@media (max-width: 1100px) {
   .heading {
     position: static;
   }

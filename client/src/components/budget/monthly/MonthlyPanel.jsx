@@ -1,13 +1,14 @@
 import { formatMoney, formatMonth } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import Panel from '../Panel.jsx'
+import styles from '../../../styles/budget/monthly/MonthlyPanel.module.css'
 
 function Trend({ net, prev }) {
   if (!prev) return null
   const now = Number(net)
   const before = Number(prev.net)
-  if (now > before) return <span aria-label="Up">▲</span>
-  if (now < before) return <span aria-label="Down">▼</span>
+  if (now > before) return <span className={styles.up} aria-label="Up">▲</span>
+  if (now < before) return <span className={styles.down} aria-label="Down">▼</span>
   return null
 }
 
@@ -18,7 +19,7 @@ function MonthlyPanel({ monthly, error }) {
   }
   else if (monthly) {
     content = (
-      <table>
+      <table className={styles.table}>
         <thead>
           <tr>
             <th>Month</th>
@@ -33,12 +34,15 @@ function MonthlyPanel({ monthly, error }) {
             // Empty means nothing in or out, not just Net 0 ($500 in and $500 out isn't empty)
             const empty = Number(row.income) === 0 && Number(row.expenses) === 0
             const show = (value) => (empty ? '—' : formatMoney(value))
+            const net = Number(row.net)
+            const netColor = net > 0 ? styles.positive : net < 0 ? styles.negative : ''
+            const cell = empty ? styles.empty : ''
             return (
               <tr key={row.month}>
                 <td>{formatMonth(row.month)}</td>
-                <td>{show(row.income)}</td>
-                <td>{show(row.expenses)}</td>
-                <td>{show(row.net)}</td>
+                <td className={cell}>{show(row.income)}</td>
+                <td className={cell}>{show(row.expenses)}</td>
+                <td className={empty ? styles.empty : `${styles.net} ${netColor}`}>{show(row.net)}</td>
                 <td>
                   <Trend net={row.net} prev={monthly[i - 1]} />
                 </td>

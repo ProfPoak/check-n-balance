@@ -1,0 +1,66 @@
+/* Month | In | Out | Net | Trend
+   Sized to fit the right column (as narrow as ~308px inside its gutters):
+   small text and tight padding, so all five columns stay visible. */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+/* Headings and values are centered over each other in every column but Month */
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-1);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table th {
+  padding-top: var(--space-1);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-rule);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.table td {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* The Month column reads left to right like a label, heading included */
+.table th:first-child,
+.table td:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-right: 0;
+}
+
+/* "—" for months with nothing in or out */
+.empty {
+  color: var(--color-muted);
+}
+
+.positive,
+.up {
+  color: var(--color-income);
+}
+
+.negative,
+.down {
+  color: var(--color-expense);
+}
+
+.net {
+  font-weight: 600;
+}
