@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
-import styles from './AuthForm.module.css'
+import styles from '../../styles/auth/AuthForm.module.css'
 
 function SignupForm() {
   const { signup } = useAuth()
