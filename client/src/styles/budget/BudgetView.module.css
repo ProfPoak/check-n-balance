@@ -1,0 +1,35 @@
+/* The budget page: header + summary bar on top, then 3 columns */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Items (left) · Timeline (center, a bit wider) · Monthly + Assets (right) */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+/* Panels in one column stack with the same gap as the grid.
+   min-width: 0 lets long names and tables shrink instead of
+   stretching the column past its share. */
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* Narrow windows: one column, in reading order */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.loading {
+  color: var(--color-muted);
+}

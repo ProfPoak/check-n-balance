@@ -8,6 +8,7 @@ import MonthlyPanel from './monthly/MonthlyPanel.jsx'
 import SummaryBar from './SummaryBar.jsx'
 import TimelinePanel from './timeline/TimelinePanel.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
+import styles from '../../styles/budget/BudgetView.module.css'
 
 function BudgetView({ id }) {
   const [budget, setBudget] = useState(null)
@@ -115,16 +116,16 @@ function BudgetView({ id }) {
       </>
   )}
   if (!budget) {
-    return <div>Loading budget...</div>
+    return <div className={styles.loading}>Loading budget...</div>
   }
 
   return (
-    <div>
+    <div className={styles.page}>
       <BudgetHeader budget={budget} onBudgetChange={changeBudget} />
       <SummaryBar monthly={monthly} />
 
-      <div>
-        <div>
+      <div className={styles.grid}>
+        <div className={styles.column}>
           <CashFlowItemsPanel
             budgetId={budget.id}
             items={items}
@@ -134,11 +135,11 @@ function BudgetView({ id }) {
           />
         </div>
 
-        <div>
+        <div className={styles.column}>
           <TimelinePanel timeline={timeline} error={timelineError} />
         </div>
 
-        <div>
+        <div className={styles.column}>
           <MonthlyPanel monthly={monthly} error={monthlyError} />
           <AssetsPanel
             budgetId={budget.id}
