@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { AuthProvider, useAuth } from '../context/AuthContext.jsx'
-import { callsTo, DEMO, mockFetch } from './mockFetch.js'
+import { AuthProvider, useAuth } from '../../context/AuthContext.jsx'
+import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
 
 // The latest value an action returned, so tests can check what the form will get back
 let lastResult

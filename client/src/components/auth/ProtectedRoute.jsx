@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext.jsx'
-import ErrorMessage from './ErrorMessage.jsx'
+import { useAuth } from '../../context/AuthContext.jsx'
+import ErrorMessage from '../shared/ErrorMessage.jsx'
 
 function ProtectedRoute() {
   const { user, checkingSession, sessionError, retrySession } = useAuth()

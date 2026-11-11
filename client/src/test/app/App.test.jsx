@@ -2,9 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import App from '../App.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
-import { DEMO, mockFetch } from './mockFetch.js'
+import App from '../../App.jsx'
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import { CURRENT, scheduleRoutes } from '../fixtures.js'
+import { DEMO, mockFetch } from '../mockFetch.js'
 
 const LOGGED_OUT = [401, { error: 'Not logged in' }]
 const LOGGED_IN = [200, DEMO]
@@ -13,11 +14,13 @@ const LOGGED_IN = [200, DEMO]
 const HOME = /^(Home|Welcome, demo@example\.com)$/
 
 // Renders the whole app at `path`. `session` is the /check_session answer.
-// GET /budgets is mocked too, so Home keeps working once Block D fetches it.
+// GET /budgets and GET /budgets/1 are mocked too, so Home and the budget page can load.
 function renderAt(path, session) {
   const routes = {
     'GET /api/check_session': session,
     'GET /api/budgets': [200, []],
+    'GET /api/budgets/1': [200, CURRENT],
+    ...scheduleRoutes(1),
   }
   mockFetch(routes)
   render(
@@ -59,8 +62,7 @@ describe('logged in', () => {
   })
 
   it.each([
-    ['/budgets/1', 'Budget 1'],
-    ['/budgets/42', 'Budget 42'],
+    ['/budgets/1', 'Current'],
     ['/nonsense', 'Page not found'],
   ])('%s shows the "%s" page', async (path, expected) => {
     renderAt(path, LOGGED_IN)

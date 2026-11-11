@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import { AuthProvider } from '../context/AuthContext.jsx'
-import LoginPage from '../pages/LoginPage.jsx'
-import { callsTo, DEMO, mockFetch } from './mockFetch.js'
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import LoginPage from '../../pages/LoginPage.jsx'
+import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
 
 const LOGGED_OUT = [401, { error: 'Not logged in' }]
 

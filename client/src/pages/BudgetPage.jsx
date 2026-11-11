@@ -1,9 +1,12 @@
 import { useParams } from 'react-router-dom'
+import BudgetView from '../components/budget/BudgetView.jsx'
 
 function BudgetPage() {
-  const { id } = useParams()
+  const id = useParams().id
 
-  return <h1>Budget {id}</h1>
+  return (
+    <BudgetView key={id} id={id} />
+  )
 }
 
 export default BudgetPage

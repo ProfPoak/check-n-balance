@@ -2,9 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import App from '../App.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
-import { callsTo, DEMO, mockFetch } from './mockFetch.js'
+import App from '../../App.jsx'
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
+import { scheduleRoutes } from '../fixtures.js'
 
 // A US time zone, so `new Date("2026-11-07")` (midnight UTC) would show as Nov 6
 globalThis.process.env.TZ = 'America/Denver'
@@ -12,6 +13,8 @@ globalThis.process.env.TZ = 'America/Denver'
 const CURRENT = { id: 1, title: 'Current', description: 'Real numbers', balance_as_of: '2026-11-07' }
 const WHAT_IF = { id: 2, title: 'New car what-if', description: null, balance_as_of: '2026-11-07' }
 const UNTITLED = { id: 9, title: 'Untitled budget', description: null, balance_as_of: '2026-11-07' }
+// What the budget page GETs after "+" opens it
+const NEW_PAGE = { ...UNTITLED, cash_flow_items: [], assets: [] }
 
 // Nov 7, 2026 in the formats a date might reasonably be shown in
 const NOV_7 = /2026-11-07|11\/7\/2026|Nov(ember)? 7,? 2026|7 Nov(ember)? 2026/
@@ -22,6 +25,7 @@ function renderHome(budgets, extraRoutes = {}) {
   const routes = {
     'GET /api/check_session': [200, DEMO],
     'GET /api/budgets': budgets,
+    ...scheduleRoutes(9),
     ...extraRoutes,
   }
   const fetchMock = mockFetch(routes)
@@ -99,10 +103,10 @@ describe('the "+" button', () => {
   })
 
   it('POSTs an empty JSON object to /budgets and opens the new budget', async () => {
-    const { fetchMock } = renderHome([200, []], { 'POST /api/budgets': [201, UNTITLED] })
+    const { fetchMock } = renderHome([200, []], { 'POST /api/budgets': [201, UNTITLED], 'GET /api/budgets/9': [200, NEW_PAGE] })
     await userEvent.setup().click(await plusButton())
 
-    expect(await screen.findByRole('heading', { name: 'Budget 9' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Untitled budget' })).toBeTruthy()
     const posts = callsTo(fetchMock, 'POST /api/budgets')
     expect(posts).toHaveLength(1)
     expect(posts[0][1].body).toBe('{}')
@@ -123,15 +127,15 @@ describe('the "+" button', () => {
   })
 
   it('the new budget shows up on Home when you go back (Home refetches)', async () => {
-    const { fetchMock, routes } = renderHome([200, [CURRENT]], { 'POST /api/budgets': [201, UNTITLED] })
+    const { routes } = renderHome([200, [CURRENT]], { 'POST /api/budgets': [201, UNTITLED], 'GET /api/budgets/9': [200, NEW_PAGE] })
     const user = userEvent.setup()
     await user.click(await plusButton())
-    await screen.findByRole('heading', { name: 'Budget 9' })
+    await screen.findByRole('heading', { level: 1, name: 'Untitled budget' })
 
     routes['GET /api/budgets'] = [200, [CURRENT, UNTITLED]]
     await user.click(within(screen.getByRole('navigation')).getByRole('link', { name: 'Home' }))
 
+    // The new link only exists in the second answer, so seeing it proves Home refetched
     expect((await budgetLink('Untitled budget')).getAttribute('href')).toBe('/budgets/9')
-    expect(callsTo(fetchMock, 'GET /api/budgets')).toHaveLength(2)
   })
 })

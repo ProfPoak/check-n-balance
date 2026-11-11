@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext.jsx'
-import ErrorMessage from './ErrorMessage.jsx'
+import { useAuth } from '../../context/AuthContext.jsx'
+import ErrorMessage from '../shared/ErrorMessage.jsx'
 
 function NavBar() {
   const { user, checkingSession, logout } = useAuth()
