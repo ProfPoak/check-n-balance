@@ -2,10 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import App from '../App.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
-import { CURRENT, scheduleRoutes } from './fixtures.js'
-import { DEMO, mockFetch } from './mockFetch.js'
+import App from '../../App.jsx'
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import { CURRENT, scheduleRoutes } from '../fixtures.js'
+import { DEMO, mockFetch } from '../mockFetch.js'
 
 const LOGGED_OUT = [401, { error: 'Not logged in' }]
 const LOGGED_IN = [200, DEMO]

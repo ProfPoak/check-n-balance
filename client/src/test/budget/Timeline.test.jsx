@@ -2,9 +2,9 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import App from '../App.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
-import { formatDate, formatMonth } from '../utils/format.js'
+import App from '../../App.jsx'
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import { formatDate, formatMonth } from '../../utils/format.js'
 import {
   CURRENT,
   CURRENT_TIMELINE,
@@ -15,8 +15,8 @@ import {
   UNTITLED,
   WHAT_IF,
   WHAT_IF_TIMELINE,
-} from './fixtures.js'
-import { callsTo, DEMO, mockFetch } from './mockFetch.js'
+} from '../fixtures.js'
+import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
 
 // A US time zone, so a UTC date bug would show the day (or month) before
 globalThis.process.env.TZ = 'America/Denver'

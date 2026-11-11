@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { PRESETS, recurrenceLabel } from '../utils/recurrence.js'
+import { PRESETS, recurrenceLabel } from '../../utils/recurrence.js'
 
 describe('PRESETS', () => {
   it('are the six roadmap presets, in order', () => {

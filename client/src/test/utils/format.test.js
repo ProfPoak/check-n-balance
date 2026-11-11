@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatMoney, formatMonth } from '../utils/format.js'
+import { formatMoney, formatMonth } from '../../utils/format.js'
 
 // A US time zone, so a UTC date bug would show the month before
 globalThis.process.env.TZ = 'America/Denver'

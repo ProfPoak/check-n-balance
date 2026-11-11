@@ -2,8 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import App from '../App.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
+import App from '../../App.jsx'
+import { AuthProvider } from '../../context/AuthContext.jsx'
 import {
   CURRENT,
   CURRENT_MONTHLY,
@@ -16,8 +16,8 @@ import {
   UNTITLED,
   WHAT_IF,
   WHAT_IF_MONTHLY,
-} from './fixtures.js'
-import { DEMO, mockFetch } from './mockFetch.js'
+} from '../fixtures.js'
+import { DEMO, mockFetch } from '../mockFetch.js'
 
 // A US time zone, so a UTC date bug would show the month before
 globalThis.process.env.TZ = 'America/Denver'

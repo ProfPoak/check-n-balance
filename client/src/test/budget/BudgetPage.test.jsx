@@ -3,10 +3,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, useNavigate } from 'react-router-dom'
-import App from '../App.jsx'
-import { AuthProvider } from '../context/AuthContext.jsx'
-import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from './fixtures.js'
-import { callsTo, DEMO, mockFetch } from './mockFetch.js'
+import App from '../../App.jsx'
+import { AuthProvider } from '../../context/AuthContext.jsx'
+import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from '../fixtures.js'
+import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
 
 const PANELS = ['Cash flow items', 'Timeline', 'Monthly cash flow', 'Projected asset value']
 
