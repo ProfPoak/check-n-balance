@@ -2,6 +2,7 @@ import { apiFetch } from '../../../api.js'
 import CashFlowItemForm from './CashFlowItemForm.jsx'
 import CashFlowItemRow from './CashFlowItemRow.jsx'
 import Panel from '../Panel.jsx'
+import styles from '../../../styles/budget/items/CashFlowItemsPanel.module.css'
 
 function CashFlowItemsPanel({ budgetId, items, onAdd, onReplace, onRemove }) {
   // Returns the apiFetch result so the form can clear itself or show the error
@@ -18,9 +19,9 @@ function CashFlowItemsPanel({ budgetId, items, onAdd, onReplace, onRemove }) {
       <CashFlowItemForm submitLabel="Add item" onSubmit={handleAdd} />
 
       {items.length === 0 ? (
-        <p>No cash flow items yet</p>
+        <p className={styles.empty}>No cash flow items yet</p>
       ) : (
-        <ul>
+        <ul className={styles.list}>
           {items.map((item) => (
             <CashFlowItemRow key={item.id} item={item} onReplace={onReplace} onRemove={onRemove} />
           ))}

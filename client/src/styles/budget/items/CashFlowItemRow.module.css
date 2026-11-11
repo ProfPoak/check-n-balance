@@ -1,0 +1,71 @@
+/* One item, on two lines (CSS order only; the HTML order is unchanged):
+   Name ................................ $1,450.00
+   Expense · Monthly · Nov 1, 2026          Edit  Delete */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.name {
+  order: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  order: 1;
+  font-weight: 600;
+}
+
+.income {
+  color: var(--color-income);
+}
+
+.expense {
+  color: var(--color-expense);
+}
+
+/* Forces the details onto the second line */
+.row::after {
+  content: '';
+  order: 2;
+  flex-basis: 100%;
+}
+
+.detail {
+  order: 3;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+/* A dot before every detail but the first
+   (~, not +, because the amount span sits between details in the HTML) */
+.detail ~ .detail::before {
+  content: '· ';
+}
+
+.edit {
+  order: 4;
+  margin-left: auto;
+}
+
+.delete {
+  order: 5;
+}
+
+.row > [role='alert'] {
+  order: 6;
+  flex-basis: 100%;
+  margin: 0;
+}
+
+/* Editing: the row holds just the form */
+.editing {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}

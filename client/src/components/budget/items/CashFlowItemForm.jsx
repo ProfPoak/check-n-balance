@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { PRESETS, recurrenceLabel } from '../../../utils/recurrence.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
+import styles from '../../../styles/budget/items/CashFlowItemForm.module.css'
 
 const MONTHLY = '1-month'
 
@@ -61,8 +62,8 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <label>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+      <label className={styles.full}>
         Name
         <input value={name} onChange={(e) => setName(e.target.value)} />
       </label>
@@ -82,7 +83,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
       </label>
 
-      <fieldset>
+      <fieldset className={styles.type}>
         <legend>Type</legend>
         <label>
           <input type="radio" checked={kind === 'income'} onChange={() => setKind('income')} />
@@ -94,7 +95,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
         </label>
       </fieldset>
 
-      <label>
+      <label className={styles.full}>
         Recurrence
         <select value={recurrence} onChange={(e) => setRecurrence(e.target.value)}>
           {options.map((o) => (

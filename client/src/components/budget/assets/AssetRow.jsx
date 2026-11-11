@@ -3,6 +3,8 @@ import { apiFetch } from '../../../api.js'
 import { formatMoney } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import AssetForm from './AssetForm.jsx'
+import styles from '../../../styles/budget/assets/AssetRow.module.css'
+import buttons from '../../../styles/shared/Buttons.module.css'
 
 function AssetRow({ asset, onReplace, onRemove }) {
   const [editing, setEditing] = useState(false)
@@ -30,7 +32,7 @@ function AssetRow({ asset, onReplace, onRemove }) {
 
   if (editing) {
     return (
-      <li>
+      <li className={styles.editing}>
         <AssetForm
           initial={asset}
           submitLabel="Save"
@@ -42,11 +44,11 @@ function AssetRow({ asset, onReplace, onRemove }) {
   }
 
   return (
-    <li>
-      <strong>{asset.name}</strong>
-      <span> {formatMoney(asset.balance)}</span>
-      <button aria-label={`Edit ${asset.name}`} onClick={() => setEditing(true)}>Edit</button>
-      <button aria-label={`Delete ${asset.name}`} onClick={handleDelete}>Delete</button>
+    <li className={styles.row}>
+      <strong className={styles.name}>{asset.name}</strong>
+      <span className={`${styles.balance} ${Number(asset.balance) < 0 ? styles.negative : ''}`}> {formatMoney(asset.balance)}</span>
+      <button className={buttons.small} aria-label={`Edit ${asset.name}`} onClick={() => setEditing(true)}>Edit</button>
+      <button className={`${buttons.small} ${buttons.danger}`} aria-label={`Delete ${asset.name}`} onClick={handleDelete}>Delete</button>
       <ErrorMessage data={error} />
     </li>
   )

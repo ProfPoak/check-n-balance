@@ -5,6 +5,7 @@ import BudgetEditForm from './BudgetEditForm.jsx'
 import BudgetSelector from './BudgetSelector.jsx'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/header/BudgetHeader.module.css'
+import buttons from '../../../styles/shared/Buttons.module.css'
 
 function BudgetHeader({ budget, onBudgetChange }) {
   const [budgets, setBudgets] = useState(null)
@@ -59,7 +60,7 @@ function BudgetHeader({ budget, onBudgetChange }) {
       ) : (
         <button onClick={() => setEditing(true)}>Edit budget</button>
       )}
-      <button className={styles.danger} onClick={handleDelete}>Delete budget</button>
+      <button className={buttons.danger} onClick={handleDelete}>Delete budget</button>
       <div className={styles.fullRow}>
         <ErrorMessage data={error} />
       </div>

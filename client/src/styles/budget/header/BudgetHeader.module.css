@@ -20,17 +20,6 @@
   min-width: 180px;
 }
 
-/* Red outline: deleting a budget can't be undone */
-.danger {
-  border-color: var(--color-expense);
-  color: var(--color-expense);
-}
-
-.danger:hover:not(:disabled) {
-  background: #fef2f2;
-  border-color: var(--color-expense);
-}
-
 /* Anything that should sit on its own line under the row */
 .fullRow {
   flex-basis: 100%;
