@@ -1,33 +1,53 @@
 /* This month at a glance, on the right end of the top bar.
-   One line of small monospace text, like the wireframe:
-   NOV 2026   Income: $0.00   Expenses: $0.00   Net: $0.00 */
+   Styled like the rest of the page: small uppercase gray labels (as on the
+   panel headings and table headers) over bold amounts, thin rules between.
+
+   NOV 2026 │ INCOME     │ EXPENSES   │ NET
+            │ $4,200.00  │ $1,770.00  │ $2,430.00 */
 .bar {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-2) var(--space-4);
+  align-items: stretch;
   margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+}
+
+.month,
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--space-4);
 }
 
 .month {
-  font-weight: 600;
+  padding-left: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-muted);
+  letter-spacing: 0.08em;
+  color: var(--color-text);
 }
 
 .stat {
+  border-left: 1px solid var(--color-rule);
   white-space: nowrap;
 }
 
+.stat:last-child {
+  padding-right: 0;
+}
+
 .label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   color: var(--color-muted);
 }
 
 .value {
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
 
 .positive {
@@ -36,4 +56,9 @@
 
 .negative {
   color: var(--color-expense);
+}
+
+/* $0.00 */
+.zero {
+  color: var(--color-muted);
 }
