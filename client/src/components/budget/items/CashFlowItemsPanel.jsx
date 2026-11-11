@@ -5,7 +5,7 @@ import Panel from '../Panel.jsx'
 import styles from '../../../styles/budget/PanelList.module.css'
 
 function CashFlowItemsPanel({ budgetId, items, onAdd, onReplace, onRemove }) {
-  // Returns the apiFetch result so the form can clear itself or show the error
+  // Returns the result so the form can clear itself or show the error
   async function handleAdd(body) {
     const res = await apiFetch(`/budgets/${budgetId}/cash_flow_items`, { method: 'POST', body })
     if (res.ok) {

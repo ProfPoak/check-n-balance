@@ -1,9 +1,3 @@
-/* This month at a glance, on the right end of the top bar.
-   Styled like the rest of the page: small uppercase gray labels (as on the
-   panel headings and table headers) over bold amounts, thin rules between.
-
-   NOV 2026 │ INCOME     │ EXPENSES   │ NET
-            │ $4,200.00  │ $1,770.00  │ $2,430.00 */
 .bar {
   display: flex;
   align-items: stretch;
@@ -58,7 +52,6 @@
   color: var(--color-expense);
 }
 
-/* $0.00 */
 .zero {
   color: var(--color-muted);
 }

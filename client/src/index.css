@@ -1,8 +1,4 @@
-/* Global styles: shared variables and bare element defaults only.
-   Component styles live in Name.module.css next to each component. */
-
 :root {
-  /* Colors */
   --color-bg: #f4f6f9;
   --color-surface: #ffffff;
   --color-text: #1f2933;
@@ -15,7 +11,6 @@
   --color-expense: #b91c1c;
   --color-error: #b91c1c;
 
-  /* Spacing scale */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 0.75rem;
@@ -23,12 +18,10 @@
   --space-5: 1.5rem;
   --space-6: 2rem;
 
-  /* Shape */
   --radius: 8px;
   --radius-sm: 4px;
   --shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 
-  /* Type */
   --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 }
@@ -39,9 +32,7 @@
   box-sizing: border-box;
 }
 
-/* The app is one window-high column: nav bar on top, <main> fills the rest
-   and does the scrolling (see Layout.module.css). This gives the budget page
-   a fixed height to split between its independently scrolling columns. */
+/* Full-height column: the nav sits on top and <main> fills the rest and scrolls. The budget page needs this fixed height to split between its scrolling columns. */
 #root {
   display: flex;
   flex-direction: column;
@@ -56,7 +47,7 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.5;
-  /* Digits all the same width, so money lines up in lists and tables */
+  /* Equal-width digits so money lines up */
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
 }
@@ -94,9 +85,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* ---------- Form controls ---------- */
-
-/* Buttons: a quiet outlined default (Edit, Cancel, Delete...) */
 button {
   font: inherit;
   font-size: 0.875rem;
@@ -115,7 +103,6 @@ button:hover:not(:disabled) {
   border-color: var(--color-muted);
 }
 
-/* Submit buttons (Log in, Add item, Save, Calculate All...) get the accent fill */
 button[type='submit'] {
   background: var(--color-accent);
   border-color: var(--color-accent);
@@ -132,7 +119,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Text-like inputs and selects (radios and checkboxes keep the browser look) */
 input:not([type='radio']):not([type='checkbox']),
 select,
 textarea {
@@ -164,7 +150,7 @@ input[type='checkbox'] {
   accent-color: var(--color-accent);
 }
 
-/* Labels: text style only. Each form's module decides stacked vs inline. */
+/* Text style only: each form's module decides whether labels stack */
 label {
   font-size: 0.875rem;
   font-weight: 500;
@@ -184,8 +170,6 @@ legend {
   font-weight: 500;
   color: var(--color-muted);
 }
-
-/* ---------- Errors ---------- */
 
 /* Every <ErrorMessage> renders <ul role="alert"> */
 [role='alert'] {

@@ -1,7 +1,3 @@
-/* The budget page, laid out like the wireframe:
-   a top bar (budget header left, summary right), then 3 columns
-   separated by thin rules, running edge to edge and down to the bottom.
-   On wide windows it fills <main> exactly, and each column scrolls on its own. */
 .page {
   display: flex;
   flex: 1;
@@ -20,16 +16,12 @@
   border-bottom: 1px solid var(--color-rule);
 }
 
-/* Add items (left) · Timeline (center) · Monthly + Assets (right).
-   The two side columns always match, so the timeline sits in the middle.
-   Shares are 1 : 1.2 : 1, and the sides never drop below 380px: measured
-   in Chrome, the monthly table needs ~346px with five-digit amounts, plus
-   the panel's 32px of side padding. */
+/* Sides never drop below 380px: measured in Chrome, the monthly table needs ~346px with five-digit amounts, plus 32px of panel padding. */
 .grid {
   display: grid;
   flex: 1;
   grid-template-columns: minmax(380px, 1fr) minmax(0, 1.2fr) minmax(380px, 1fr);
-  /* One row that fills the rest of the page and never grows past it */
+  /* minmax(0, 1fr) caps the row at the page height so each column scrolls instead of growing */
   grid-template-rows: minmax(0, 1fr);
   min-height: 0;
   background: var(--color-surface);
@@ -40,7 +32,6 @@
   flex-direction: column;
   min-width: 0;
   border-right: 1px solid var(--color-rule);
-  /* Each column scrolls by itself */
   overflow-y: auto;
 }
 
@@ -48,9 +39,7 @@
   border-right: none;
 }
 
-/* Narrower windows: one column, in reading order, ruled between.
-   The page grows with its content and <main> scrolls it as one.
-   1100px = two 380px sides + a usable ~340px timeline. */
+/* 1100px = two 380px sides + a usable ~340px timeline. Below that, stack and scroll as one page. */
 @media (max-width: 1100px) {
   .page {
     flex: none;
@@ -68,7 +57,6 @@
   }
 }
 
-/* "Loading budget..." and the not-found error */
 .message {
   padding: var(--space-5);
 }

@@ -1,4 +1,4 @@
-// A budget page panel. The <h2> names the <section>, so tests find it as a region by that name.
+// aria-labelledby makes the <section> a region named by its heading; tests find panels that way.
 import styles from '../../styles/budget/Panel.module.css'
 
 function Panel({ id, title, children }) {

@@ -31,7 +31,7 @@ function MonthlyPanel({ monthly, error }) {
         </thead>
         <tbody>
           {monthly.map((row, i) => {
-            // Empty means nothing in or out, not just Net 0 ($500 in and $500 out isn't empty)
+            // Empty = nothing in or out, not just Net 0 ($500 in and $500 out isn't empty)
             const empty = Number(row.income) === 0 && Number(row.expenses) === 0
             const show = (value) => (empty ? '—' : formatMoney(value))
             const net = Number(row.net)

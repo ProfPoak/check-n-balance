@@ -1,13 +1,10 @@
-/* Month | In | Out | Net | Trend
-   Sized to fit the right column (as narrow as ~308px inside its gutters):
-   small text and tight padding, so all five columns stay visible. */
+/* Small text and tight padding so all five columns fit the right column (~308px at its narrowest) */
 .table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.8125rem;
 }
 
-/* Headings and values are centered over each other in every column but Month */
 .table th,
 .table td {
   padding: var(--space-2) var(--space-1);
@@ -34,7 +31,6 @@
   border-bottom: none;
 }
 
-/* The Month column reads left to right like a label, heading included */
 .table th:first-child,
 .table td:first-child {
   padding-left: 0;
@@ -46,7 +42,6 @@
   padding-right: 0;
 }
 
-/* "—" for months with nothing in or out */
 .empty {
   color: var(--color-muted);
 }

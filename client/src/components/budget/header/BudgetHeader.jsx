@@ -13,7 +13,7 @@ function BudgetHeader({ budget, onBudgetChange }) {
   const [error, setError] = useState(null)
   const navigate = useNavigate()
 
-  // The selector's list. On failure budgets stays null and the selector is hidden.
+  // If this fails, budgets stays null and the selector is hidden
   useEffect(() => {
     let ignore = false
     apiFetch('/budgets').then(res => {

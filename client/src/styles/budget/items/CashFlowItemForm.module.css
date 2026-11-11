@@ -1,12 +1,9 @@
-/* Add/edit item form: two columns, in the same order as the HTML.
-   Name (full) / Amount · Date / End date · Type / Recurrence (full) / button(s) */
 .form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
 }
 
-/* Each label stacks its text above its control */
 .form > label {
   display: flex;
   flex-direction: column;
@@ -23,7 +20,6 @@
   grid-column: 1 / -1;
 }
 
-/* Income / Expense: radios side by side */
 .type {
   display: flex;
   align-items: center;
@@ -38,7 +34,7 @@
   color: var(--color-text);
 }
 
-/* Buttons and errors span both columns; with Cancel, Save and Cancel share a row */
+/* With a Cancel button, Save and Cancel share a row instead of each spanning both columns */
 .form > button,
 .form > [role='alert'] {
   grid-column: 1 / -1;

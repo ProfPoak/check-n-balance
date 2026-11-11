@@ -1,4 +1,3 @@
-/* A card under the header row: fields side by side, buttons at the end */
 .form {
   display: flex;
   flex-wrap: wrap;
@@ -11,7 +10,6 @@
   box-shadow: var(--shadow);
 }
 
-/* Each label stacks its text above its input */
 .form label {
   display: flex;
   flex-direction: column;
@@ -22,7 +20,6 @@
   flex: 1 1 220px;
 }
 
-/* Errors get their own line */
 .form [role='alert'] {
   flex-basis: 100%;
   margin: 0;

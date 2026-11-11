@@ -4,9 +4,7 @@ import { formatDate, formatMoney } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/assets/ProjectionForm.module.css'
 
-// Under the asset list: "Project to" date + Calculate All → GET /budgets/:id/projection?to=...
-// AssetsPanel renders it with key={version}, so any item, asset or budget change throws the old result away.
-// Props: budgetId
+// AssetsPanel renders this with key={version}, so any budget change throws away a stale result.
 function ProjectionForm({ budgetId }) {
   const [to, setTo] = useState('')
   const [result, setResult] = useState(null)
@@ -15,7 +13,7 @@ function ProjectionForm({ budgetId }) {
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
-    // A blank date still goes to the server (as "?to="), so its message shows
+    // A blank date is still sent (as "?to=") so the server returns its message
     const res = await apiFetch(`/budgets/${budgetId}/projection?to=${to}`)
     if (res.ok) {
       setResult(res.data)

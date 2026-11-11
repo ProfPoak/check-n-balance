@@ -1,5 +1,3 @@
-/* Full-width white bar, edge to edge like the budget page below it.
-   24px side padding matches the budget page's top bar. */
 .nav {
   flex: none;
   display: flex;
@@ -12,7 +10,6 @@
   box-shadow: var(--shadow);
 }
 
-/* The app name, which is also the link to Home */
 .brand {
   font-size: 1.125rem;
   font-weight: 700;
@@ -34,7 +31,6 @@
   color: var(--color-accent);
 }
 
-/* Pushes this item and everything after it to the right side of the bar */
 .pushRight {
   margin-left: auto;
 }

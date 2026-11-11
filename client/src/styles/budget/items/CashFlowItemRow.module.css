@@ -1,8 +1,4 @@
-/* One item, on two lines (CSS order only; the HTML order is unchanged):
-   Name ...................... $1,450.00  Edit  Delete
-   Expense · Monthly · Nov 1, 2026 · until ...
-   The buttons share the first line, so a long detail line can wrap
-   on its own without splitting Edit from Delete. */
+/* Two lines laid out with CSS order only; the HTML order is unchanged (tests rely on it). Buttons share line one so a long detail line wraps without splitting Edit from Delete. */
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -12,8 +8,7 @@
   border-bottom: 1px solid var(--color-border);
 }
 
-/* flex-basis 0: a long name shrinks and wraps instead of pushing the
-   amount and buttons onto another line */
+/* flex-basis 0: a long name shrinks and wraps instead of pushing the amount and buttons down */
 .name {
   order: 0;
   flex: 1 1 0;
@@ -44,7 +39,7 @@
   order: 3;
 }
 
-/* Forces the details onto the second line */
+/* Line break: forces the details onto the second line */
 .row::after {
   content: '';
   order: 4;
@@ -57,8 +52,7 @@
   color: var(--color-muted);
 }
 
-/* A dot before every detail but the first
-   (~, not +, because the amount span sits between details in the HTML) */
+/* ~, not +, because the amount span sits between details in the HTML */
 .detail ~ .detail::before {
   content: '· ';
 }
@@ -69,7 +63,6 @@
   margin: 0;
 }
 
-/* Editing: the row holds just the form */
 .editing {
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--color-border);

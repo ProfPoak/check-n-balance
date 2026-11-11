@@ -14,8 +14,6 @@
   color: var(--color-muted);
 }
 
-/* "Start new budget" button: one blue pill, with the plus drawn
-   in a lighter circle at its right end (the span is decorative only). */
 .newButton {
   display: inline-flex;
   align-items: center;
@@ -36,8 +34,7 @@
   background: var(--color-accent-hover);
 }
 
-/* The plus: two white bars centered in a 28px circle.
-   Drawn with CSS because a "+" character sits off-center in most fonts. */
+/* Drawn with two bars because a "+" character sits off-center in most fonts */
 .plus {
   position: relative;
   width: 28px;
@@ -59,7 +56,6 @@
   transform: translate(-50%, -50%);
 }
 
-/* The vertical bar */
 .plus::after {
   transform: translate(-50%, -50%) rotate(90deg);
 }
