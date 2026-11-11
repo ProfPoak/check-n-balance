@@ -133,7 +133,7 @@ describe('the "+" button', () => {
     await screen.findByRole('heading', { level: 1, name: 'Untitled budget' })
 
     routes['GET /api/budgets'] = [200, [CURRENT, UNTITLED]]
-    await user.click(within(screen.getByRole('navigation')).getByRole('link', { name: 'Home' }))
+    await user.click(within(screen.getByRole('navigation')).getByRole('link', { name: "Check'N Balance" }))
 
     // The new link only exists in the second answer, so seeing it proves Home refetched
     expect((await budgetLink('Untitled budget')).getAttribute('href')).toBe('/budgets/9')

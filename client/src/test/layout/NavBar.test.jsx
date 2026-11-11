@@ -66,18 +66,18 @@ describe('logged out', () => {
 })
 
 describe('logged in', () => {
-  it("shows a Home link, the user's email and Log out, and no Login or Signup", async () => {
+  it("shows the Check'N Balance home link, the user's email and Log out, and no Login or Signup", async () => {
     renderAt('/budgets/1', { 'GET /api/check_session': LOGGED_IN })
     expect(await nav().findByRole('button', { name: 'Log out' })).toBeTruthy()
-    expect(nav().getByRole('link', { name: 'Home' })).toBeTruthy()
+    expect(nav().getByRole('link', { name: "Check'N Balance" })).toBeTruthy()
     expect(nav().getByText('demo@example.com')).toBeTruthy()
     expect(nav().queryByRole('link', { name: 'Login' })).toBeNull()
     expect(nav().queryByRole('link', { name: 'Signup' })).toBeNull()
   })
 
-  it('the Home link opens /', async () => {
+  it("the Check'N Balance link opens /", async () => {
     renderAt('/budgets/1', { 'GET /api/check_session': LOGGED_IN })
-    await userEvent.setup().click(await nav().findByRole('link', { name: 'Home' }))
+    await userEvent.setup().click(await nav().findByRole('link', { name: "Check'N Balance" }))
     expect(await heading()).toMatch(HOME)
   })
 })

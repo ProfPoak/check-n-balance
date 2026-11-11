@@ -1,0 +1,6 @@
+/* The page container every route renders inside */
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-5) var(--space-6);
+}

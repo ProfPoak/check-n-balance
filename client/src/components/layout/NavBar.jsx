@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
+import styles from './NavBar.module.css'
 
 function NavBar() {
   const { user, checkingSession, logout } = useAuth()
@@ -20,22 +21,22 @@ function NavBar() {
   }
 
   if (checkingSession) {
-    return <nav></nav>
+    return <nav className={styles.nav}></nav>
   }
 
   return (
-    <nav>
+    <nav className={styles.nav}>
       {user ? (
         <>
-          <Link to="/">Home</Link>
-          <span>{user.email}</span>
+          <Link to="/" className={styles.brand}>Check'N Balance</Link>
+          <span className={styles.email}>{user.email}</span>
           <button onClick={handleLogout}>Log out</button>
           <ErrorMessage data={error} />
         </>
       ) : (
         <>
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Signup</Link>
+          <Link to="/login" className={styles.link}>Login</Link>
+          <Link to="/signup" className={styles.link}>Signup</Link>
         </>
       )}
     </nav>

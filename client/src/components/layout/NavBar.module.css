@@ -1,0 +1,41 @@
+/* Full-width white bar. The side padding lines its contents up with the
+   1200px page container in Layout.module.css, with no extra wrapper. */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 56px;
+  padding: var(--space-2) max(var(--space-5), calc((100% - 1200px) / 2 + var(--space-5)));
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow);
+}
+
+/* The app name, which is also the link to Home */
+.brand {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-accent);
+}
+
+.brand:hover {
+  color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.link {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.link:hover {
+  color: var(--color-accent);
+}
+
+/* Pushes the email and Log out to the right */
+.email {
+  margin-left: auto;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
