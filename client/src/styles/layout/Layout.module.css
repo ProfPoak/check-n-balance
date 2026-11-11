@@ -1,6 +1,6 @@
-/* The page container every route renders inside */
+/* Every route renders inside <main>. It has no width limit or padding:
+   the budget page runs edge to edge (like the wireframe), and the other
+   pages center themselves (see styles/pages/). */
 .main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--space-5) var(--space-5) var(--space-6);
+  display: block;
 }

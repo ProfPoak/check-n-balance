@@ -110,19 +110,21 @@ function BudgetView({ id }) {
 
   if (error) {
     return (
-      <>
+      <div className={styles.message}>
         <ErrorMessage data={error} />
         <Link to="/">Back to Home</Link>
-      </>
+      </div>
   )}
   if (!budget) {
-    return <div className={styles.loading}>Loading budget...</div>
+    return <div className={`${styles.message} ${styles.loading}`}>Loading budget...</div>
   }
 
   return (
     <div className={styles.page}>
-      <BudgetHeader budget={budget} onBudgetChange={changeBudget} />
-      <SummaryBar monthly={monthly} />
+      <div className={styles.topBar}>
+        <BudgetHeader budget={budget} onBudgetChange={changeBudget} />
+        <SummaryBar monthly={monthly} />
+      </div>
 
       <div className={styles.grid}>
         <div className={styles.column}>

@@ -1,33 +1,60 @@
-/* The budget page: header + summary bar on top, then 3 columns */
+/* The budget page, laid out like the wireframe:
+   a top bar (budget header left, summary right), then 3 columns
+   separated by thin rules, running edge to edge and down to the bottom. */
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  /* Fill the window under the 56px nav bar, so the column rules reach the bottom */
+  min-height: calc(100vh - 57px);
 }
 
-/* Items (left) · Timeline (center, a bit wider) · Monthly + Assets (right) */
+.topBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+/* Add items (left) · Timeline (center) · Monthly + Assets (right).
+   The two side columns always match, so the timeline sits in the middle.
+   Shares are 1 : 1.2 : 1, and the sides never drop below 340px so the
+   item form and the 5-column monthly table have room. */
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 1fr;
-  gap: var(--space-4);
-  align-items: start;
+  flex: 1;
+  grid-template-columns: minmax(340px, 1fr) minmax(0, 1.2fr) minmax(340px, 1fr);
+  background: var(--color-surface);
 }
 
-/* Panels in one column stack with the same gap as the grid.
-   min-width: 0 lets long names and tables shrink instead of
-   stretching the column past its share. */
 .column {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
   min-width: 0;
+  border-right: 1px solid var(--color-rule);
 }
 
-/* Narrow windows: one column, in reading order */
+.column:last-child {
+  border-right: none;
+}
+
+/* Narrow windows: one column, in reading order, ruled between */
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
   }
+
+  .column {
+    border-right: none;
+    border-bottom: 1px solid var(--color-rule);
+  }
+}
+
+/* "Loading budget..." and the not-found error */
+.message {
+  padding: var(--space-5);
 }
 
 .loading {

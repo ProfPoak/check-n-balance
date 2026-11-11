@@ -1,0 +1,39 @@
+/* This month at a glance, on the right end of the top bar.
+   One line of small monospace text, like the wireframe:
+   NOV 2026   Income: $0.00   Expenses: $0.00   Net: $0.00 */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.month {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.stat {
+  white-space: nowrap;
+}
+
+.label {
+  color: var(--color-muted);
+}
+
+.value {
+  font-weight: 600;
+}
+
+.positive {
+  color: var(--color-income);
+}
+
+.negative {
+  color: var(--color-expense);
+}

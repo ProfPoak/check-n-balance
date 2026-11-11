@@ -1,6 +1,6 @@
 /* The centered card that LoginPage and SignupPage sit in */
 .card {
-  max-width: 400px;
+  width: min(400px, calc(100% - 2 * var(--space-4)));
   margin: var(--space-6) auto;
   padding: var(--space-6);
   background: var(--color-surface);

@@ -1,0 +1,43 @@
+/* Title on the left; selector, Edit and Delete on the right.
+   The edit form and errors drop to their own full-width line below. */
+.header {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  min-width: 0;
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.selector {
+  min-width: 180px;
+}
+
+/* Red outline: deleting a budget can't be undone */
+.danger {
+  border-color: var(--color-expense);
+  color: var(--color-expense);
+}
+
+.danger:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: var(--color-expense);
+}
+
+/* Anything that should sit on its own line under the row */
+.fullRow {
+  flex-basis: 100%;
+  order: 1;
+}
+
+/* The error wrapper is empty when there's no error; don't let it add a blank line */
+.fullRow:empty {
+  display: none;
+}
