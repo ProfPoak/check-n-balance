@@ -1,0 +1,22 @@
+/* The centered card that LoginPage and SignupPage sit in */
+.card {
+  max-width: 400px;
+  margin: var(--space-6) auto;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.card h1 {
+  margin-bottom: var(--space-4);
+}
+
+/* "No account? Sign Up" / "Have an account? Log in" */
+.switch {
+  margin: var(--space-5) 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}

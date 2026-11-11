@@ -1,0 +1,21 @@
+/* LoginForm and SignupForm: label above input, full-width fields */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* Space between one field and the next label */
+.form input + label {
+  margin-top: var(--space-3);
+}
+
+.form input {
+  font-size: 1rem;
+}
+
+.form button[type='submit'] {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  font-size: 1rem;
+}

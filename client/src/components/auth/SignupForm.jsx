@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
+import styles from './AuthForm.module.css'
 
 function SignupForm() {
   const { signup } = useAuth()
@@ -31,7 +32,7 @@ function SignupForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <label htmlFor="email">Email</label>
       <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 

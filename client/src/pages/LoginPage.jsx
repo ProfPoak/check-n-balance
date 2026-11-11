@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
 import LoginForm from '../components/auth/LoginForm.jsx'
+import styles from './AuthPage.module.css'
 
 function LoginPage() {
   return( 
-    <div>
+    <div className={styles.card}>
       <h1>Login</h1>
       <LoginForm />
-      <p>No account? <Link to="/signup">Sign Up</Link></p>
+      <p className={styles.switch}>No account? <Link to="/signup">Sign Up</Link></p>
     </div>
   )
 }

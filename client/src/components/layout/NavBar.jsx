@@ -29,13 +29,13 @@ function NavBar() {
       {user ? (
         <>
           <Link to="/" className={styles.brand}>Check'N Balance</Link>
-          <span className={styles.email}>{user.email}</span>
+          <span className={`${styles.email} ${styles.pushRight}`}>{user.email}</span>
           <button onClick={handleLogout}>Log out</button>
           <ErrorMessage data={error} />
         </>
       ) : (
         <>
-          <Link to="/login" className={styles.link}>Login</Link>
+          <Link to="/login" className={`${styles.link} ${styles.pushRight}`}>Login</Link>
           <Link to="/signup" className={styles.link}>Signup</Link>
         </>
       )}
