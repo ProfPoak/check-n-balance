@@ -1,6 +1,7 @@
 import { formatDate, formatMoney, formatMonth } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import Panel from '../Panel.jsx'
+import styles from '../../../styles/budget/timeline/TimelinePanel.module.css'
 
 // [{date: "2026-11-01", ...}, ...] -> [{month: "2026-11", entries: [...]}, ...]
 // The server already sorts by date, so an entry either joins the last group or starts a new one.
@@ -27,18 +28,19 @@ function TimelinePanel({ timeline, error }) {
     content = <ErrorMessage data={error} />
   }
   else if (timeline && timeline.length === 0) {
-    content = <p>No items yet</p>
+    content = <p className={styles.empty}>No items yet</p>
   }
   else if (timeline) {
     content = groupByMonth(timeline).map(({ month, entries }) => (
-      <div key={month}>
-        <h3>{formatMonth(month)}</h3>
-        <ul>
+      <div key={month} className={styles.month}>
+        <h3 className={styles.monthHeading}>{formatMonth(month)}</h3>
+        <ul className={styles.list}>
           {entries.map((entry) => (
-            <li key={`${entry.item_id}-${entry.date}`} className={entry.kind}>
-              <span>{formatDate(entry.date)}</span>{' '}
-              <span>{entry.name}</span>{' '}
-              <span>
+            // The plain kind class stays: tests check it. The module classes do the styling.
+            <li key={`${entry.item_id}-${entry.date}`} className={`${entry.kind} ${styles.entry} ${styles[entry.kind]}`}>
+              <span className={styles.date}>{formatDate(entry.date)}</span>{' '}
+              <span className={styles.name}>{entry.name}</span>{' '}
+              <span className={styles.amount}>
                 {entry.kind === 'income' ? '+' : '-'}
                 {formatMoney(entry.amount)}
               </span>

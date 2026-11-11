@@ -1,6 +1,7 @@
 /* Full-width white bar, edge to edge like the budget page below it.
    24px side padding matches the budget page's top bar. */
 .nav {
+  flex: none;
   display: flex;
   align-items: center;
   gap: var(--space-4);

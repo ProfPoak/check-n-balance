@@ -39,6 +39,16 @@
   box-sizing: border-box;
 }
 
+/* The app is one window-high column: nav bar on top, <main> fills the rest
+   and does the scrolling (see Layout.module.css). This gives the budget page
+   a fixed height to split between its independently scrolling columns. */
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+}
+
 body {
   margin: 0;
   background: var(--color-bg);

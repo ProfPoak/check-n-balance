@@ -1,0 +1,67 @@
+/* The timeline: one block per month, each entry on one line:
+   Nov 13, 2026   Paycheck ........................ +$2,100.00 */
+
+.month + .month {
+  margin-top: var(--space-4);
+}
+
+/* Month subheading: a light band across the panel */
+.monthHeading {
+  margin: 0;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Date | name | amount */
+.entry {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: baseline;
+  padding: var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.entry:last-child {
+  border-bottom: none;
+}
+
+.date {
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+.name {
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.income .amount {
+  color: var(--color-income);
+}
+
+.expense .amount {
+  color: var(--color-expense);
+}
+
+.empty {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}

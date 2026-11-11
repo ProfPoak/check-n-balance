@@ -1,6 +1,11 @@
-/* Every route renders inside <main>. It has no width limit or padding:
-   the budget page runs edge to edge (like the wireframe), and the other
-   pages center themselves (see styles/pages/). */
+/* Every route renders inside <main>, which fills the window under the nav bar
+   and scrolls on its own (the nav bar stays put). No width limit or padding:
+   the budget page runs edge to edge, and the other pages center themselves
+   (see styles/pages/). It's a flex column so the budget page can fill it exactly. */
 .main {
-  display: block;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
 }
