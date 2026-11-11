@@ -1,0 +1,50 @@
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.form > label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.form input:not([type='radio']),
+.form select {
+  width: 100%;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.type {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.type label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text);
+}
+
+/* With a Cancel button, Save and Cancel share a row instead of each spanning both columns */
+.form > button,
+.form > [role='alert'] {
+  grid-column: 1 / -1;
+}
+
+.form > button[type='submit']:has(+ button),
+.form > button[type='submit'] + button {
+  grid-column: auto;
+}
+
+.form > [role='alert'] {
+  margin: 0;
+}

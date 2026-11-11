@@ -1,0 +1,69 @@
+/* Two lines laid out with CSS order only; the HTML order is unchanged (tests rely on it). Buttons share line one so a long detail line wraps without splitting Edit from Delete. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* flex-basis 0: a long name shrinks and wraps instead of pushing the amount and buttons down */
+.name {
+  order: 0;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.amount {
+  order: 1;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.income {
+  color: var(--color-income);
+}
+
+.expense {
+  color: var(--color-expense);
+}
+
+.edit {
+  order: 2;
+  margin-left: var(--space-1);
+}
+
+.delete {
+  order: 3;
+}
+
+/* Line break: forces the details onto the second line */
+.row::after {
+  content: '';
+  order: 4;
+  flex-basis: 100%;
+}
+
+.detail {
+  order: 5;
+  font-size: 0.8125rem;
+  color: var(--color-muted);
+}
+
+/* ~, not +, because the amount span sits between details in the HTML */
+.detail ~ .detail::before {
+  content: '· ';
+}
+
+.row > [role='alert'] {
+  order: 6;
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.editing {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border);
+}

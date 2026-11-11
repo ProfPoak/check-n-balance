@@ -3,6 +3,7 @@ import AssetForm from './AssetForm.jsx'
 import AssetRow from './AssetRow.jsx'
 import Panel from '../Panel.jsx'
 import ProjectionForm from './ProjectionForm.jsx'
+import styles from '../../../styles/budget/PanelList.module.css'
 
 function AssetsPanel({ budgetId, assets, onAdd, onReplace, onRemove, version }) {
   async function handleAdd(body) {
@@ -18,9 +19,9 @@ function AssetsPanel({ budgetId, assets, onAdd, onReplace, onRemove, version }) 
       <AssetForm submitLabel="Add asset" onSubmit={handleAdd} />
 
       {assets.length === 0 ? (
-        <p>No assets yet</p>
+        <p className={styles.empty}>No assets yet</p>
       ) : (
-        <ul>
+        <ul className={styles.list}>
           {assets.map((asset) => (
             <AssetRow key={asset.id} asset={asset} onReplace={onReplace} onRemove={onRemove} />
           ))}

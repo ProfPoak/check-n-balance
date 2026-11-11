@@ -1,19 +1,20 @@
 import { Link } from 'react-router-dom'
 import { formatDate } from '../../utils/format.js'
+import styles from '../../styles/home/BudgetList.module.css'
 
 function BudgetList({ budgets }) {
   if (budgets.length === 0) {
-    return <p>No budgets yet</p>
+    return <p className={styles.empty}>No budgets yet</p>
   }
 
   return (
-    <ul>
+    <ul className={styles.list}>
       {budgets.map((budget) => (
         <li key={budget.id}>
-          <Link to={`/budgets/${budget.id}`}>
-            <strong>{budget.title}</strong>
-            {budget.description && <span> {budget.description}</span>}
-            <span> Balance as of {formatDate(budget.balance_as_of)}</span>
+          <Link className={styles.card} to={`/budgets/${budget.id}`}>
+            <strong className={styles.title}>{budget.title}</strong>
+            {budget.description && <span className={styles.description}> {budget.description}</span>}
+            <span className={styles.date}> Balance as of {formatDate(budget.balance_as_of)}</span>
           </Link>
         </li>
       ))}

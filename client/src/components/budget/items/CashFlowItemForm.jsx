@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { PRESETS, recurrenceLabel } from '../../../utils/recurrence.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
+import styles from '../../../styles/budget/items/CashFlowItemForm.module.css'
 
 const MONTHLY = '1-month'
 
-// The <option> key for an item's interval/unit: a preset's key, or "custom" when none match
+// "custom" when the interval/unit matches no preset
 function keyFor(item) {
   const preset = PRESETS.find((p) => p.interval === item.interval && p.unit === item.unit)
   return preset ? preset.key : 'custom'
 }
 
-// Add and edit in one form.
 function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
   const [name, setName] = useState(initial?.name ?? '')
   const [amount, setAmount] = useState(initial?.amount ?? '')
@@ -21,8 +21,8 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
   const [error, setError] = useState(null)
   const [saving, setSaving] = useState(false)
 
-  // The presets, plus the item's own recurrence if it matches none of them,
-  // saving an "every 10 days" item doesn't turn it into Monthly
+  // Keep a non-preset recurrence as its own option, so saving an "every 10 days" item
+  // doesn't turn it into Monthly
   const options = [...PRESETS]
   if (initial && keyFor(initial) === 'custom') {
     options.push({ key: 'custom', label: recurrenceLabel(initial), interval: initial.interval, unit: initial.unit })
@@ -61,8 +61,8 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <label>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
+      <label className={styles.full}>
         Name
         <input value={name} onChange={(e) => setName(e.target.value)} />
       </label>
@@ -82,7 +82,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
         <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
       </label>
 
-      <fieldset>
+      <fieldset className={styles.type}>
         <legend>Type</legend>
         <label>
           <input type="radio" checked={kind === 'income'} onChange={() => setKind('income')} />
@@ -94,7 +94,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
         </label>
       </fieldset>
 
-      <label>
+      <label className={styles.full}>
         Recurrence
         <select value={recurrence} onChange={(e) => setRecurrence(e.target.value)}>
           {options.map((o) => (

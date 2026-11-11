@@ -1,0 +1,30 @@
+.header {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  min-width: 0;
+  font-size: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.selector {
+  min-width: 180px;
+}
+
+/* flex-basis 100% + order 1: drops below the title row (the edit form and errors) */
+.fullRow {
+  flex-basis: 100%;
+  order: 1;
+}
+
+/* The error wrapper is empty when there is no error; without this it adds a blank line */
+.fullRow:empty {
+  display: none;
+}

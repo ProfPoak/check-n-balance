@@ -1,0 +1,8 @@
+/* No width limit or padding: the budget page runs edge to edge and other pages center themselves. Flex column so the budget page can fill it exactly. */
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}

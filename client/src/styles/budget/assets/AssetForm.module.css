@@ -1,0 +1,30 @@
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.form > label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.form input {
+  width: 100%;
+}
+
+.form > button,
+.form > [role='alert'] {
+  grid-column: 1 / -1;
+}
+
+.form > button[type='submit']:has(+ button),
+.form > button[type='submit'] + button {
+  grid-column: auto;
+}
+
+.form > [role='alert'] {
+  margin: 0;
+}

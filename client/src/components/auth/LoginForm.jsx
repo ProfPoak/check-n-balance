@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
+import styles from '../../styles/auth/AuthForm.module.css'
 
 function LoginForm() {
   const{ login } = useAuth()
@@ -26,7 +27,7 @@ function LoginForm() {
   }
 
   return(
-    <form onSubmit={handleSubmit} noValidate>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <label htmlFor="email">Email</label>
       <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
 

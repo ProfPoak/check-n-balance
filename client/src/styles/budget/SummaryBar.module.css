@@ -1,0 +1,57 @@
+.bar {
+  display: flex;
+  align-items: stretch;
+  margin-left: auto;
+}
+
+.month,
+.stat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--space-4);
+}
+
+.month {
+  padding-left: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+}
+
+.stat {
+  border-left: 1px solid var(--color-rule);
+  white-space: nowrap;
+}
+
+.stat:last-child {
+  padding-right: 0;
+}
+
+.label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+}
+
+.value {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.positive {
+  color: var(--color-income);
+}
+
+.negative {
+  color: var(--color-expense);
+}
+
+.zero {
+  color: var(--color-muted);
+}

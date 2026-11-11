@@ -39,7 +39,7 @@ function renderHome(budgets, extraRoutes = {}) {
   return { fetchMock, routes }
 }
 
-const plusButton = () => screen.findByRole('button', { name: 'New budget' })
+const plusButton = () => screen.findByRole('button', { name: 'Start new budget' })
 const budgetLink = (title) => screen.findByRole('link', { name: new RegExp(title) })
 
 afterEach(() => {
@@ -133,7 +133,7 @@ describe('the "+" button', () => {
     await screen.findByRole('heading', { level: 1, name: 'Untitled budget' })
 
     routes['GET /api/budgets'] = [200, [CURRENT, UNTITLED]]
-    await user.click(within(screen.getByRole('navigation')).getByRole('link', { name: 'Home' }))
+    await user.click(within(screen.getByRole('navigation')).getByRole('link', { name: "Check'N Balance" }))
 
     // The new link only exists in the second answer, so seeing it proves Home refetched
     expect((await budgetLink('Untitled budget')).getAttribute('href')).toBe('/budgets/9')

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
+import styles from '../../../styles/budget/assets/AssetForm.module.css'
 
 function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
   const [name, setName] = useState(initial?.name ?? '')
@@ -23,7 +24,7 @@ function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
+    <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <label>
         Name
         <input value={name} onChange={(e) => setName(e.target.value)} />

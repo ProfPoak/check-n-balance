@@ -1,0 +1,14 @@
+.small {
+  padding: 2px var(--space-2);
+  font-size: 0.75rem;
+}
+
+.danger {
+  border-color: var(--color-expense);
+  color: var(--color-expense);
+}
+
+.danger:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: var(--color-expense);
+}

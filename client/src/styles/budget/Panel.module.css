@@ -1,0 +1,32 @@
+.panel {
+  /* Gutter is padding, not child margins, so width: 100% children (the monthly table) fit inside it */
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+.panel + .panel {
+  border-top: 1px solid var(--color-rule);
+}
+
+.heading {
+  /* Sticks only within its own panel, so the next panel's heading pushes it away */
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-surface);
+  /* Pulls the heading and its rule across the panel padding, edge to edge */
+  margin: 0 calc(-1 * var(--space-4)) var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-rule);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+}
+
+/* Same breakpoint as BudgetView.module.css */
+@media (max-width: 1100px) {
+  .heading {
+    position: static;
+  }
+}

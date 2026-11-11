@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { apiFetch } from '../../../api.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
+import styles from '../../../styles/budget/header/BudgetEditForm.module.css'
 
-function BudgetEditForm({ budget, onSaved, onCancel }) {
+function BudgetEditForm({ budget, onSaved, onCancel, className }) {
   const [title, setTitle] = useState(budget.title)
   const [description, setDescription] = useState(budget.description ?? '')
   const [balanceAsOf, setBalanceAsOf] = useState(budget.balance_as_of)
@@ -27,12 +28,12 @@ function BudgetEditForm({ budget, onSaved, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate>
-      <label>
+    <form className={`${styles.form} ${className ?? ''}`} onSubmit={handleSubmit} noValidate>
+      <label className={styles.wide}>
         Title
         <input value={title} onChange={(e) => setTitle(e.target.value)} />
       </label>
-      <label>
+      <label className={styles.wide}>
         Description
         <input value={description} onChange={(e) => setDescription(e.target.value)} />
       </label>

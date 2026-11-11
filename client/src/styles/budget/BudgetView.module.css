@@ -1,0 +1,66 @@
+.page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.topBar {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  padding: var(--space-3) var(--space-5);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-rule);
+}
+
+/* Sides never drop below 380px: measured in Chrome, the monthly table needs ~346px with five-digit amounts, plus 32px of panel padding. */
+.grid {
+  display: grid;
+  flex: 1;
+  grid-template-columns: minmax(380px, 1fr) minmax(0, 1.2fr) minmax(380px, 1fr);
+  /* minmax(0, 1fr) caps the row at the page height so each column scrolls instead of growing */
+  grid-template-rows: minmax(0, 1fr);
+  min-height: 0;
+  background: var(--color-surface);
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-right: 1px solid var(--color-rule);
+  overflow-y: auto;
+}
+
+.column:last-child {
+  border-right: none;
+}
+
+/* 1100px = two 380px sides + a usable ~340px timeline. Below that, stack and scroll as one page. */
+@media (max-width: 1100px) {
+  .page {
+    flex: none;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+  }
+
+  .column {
+    border-right: none;
+    border-bottom: 1px solid var(--color-rule);
+    overflow-y: visible;
+  }
+}
+
+.message {
+  padding: var(--space-5);
+}
+
+.loading {
+  color: var(--color-muted);
+}
