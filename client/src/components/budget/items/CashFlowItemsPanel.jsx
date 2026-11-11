@@ -2,7 +2,7 @@ import { apiFetch } from '../../../api.js'
 import CashFlowItemForm from './CashFlowItemForm.jsx'
 import CashFlowItemRow from './CashFlowItemRow.jsx'
 import Panel from '../Panel.jsx'
-import styles from '../../../styles/budget/items/CashFlowItemsPanel.module.css'
+import styles from '../../../styles/budget/PanelList.module.css'
 
 function CashFlowItemsPanel({ budgetId, items, onAdd, onReplace, onRemove }) {
   // Returns the apiFetch result so the form can clear itself or show the error

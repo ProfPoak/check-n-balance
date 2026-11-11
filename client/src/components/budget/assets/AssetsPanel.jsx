@@ -3,7 +3,7 @@ import AssetForm from './AssetForm.jsx'
 import AssetRow from './AssetRow.jsx'
 import Panel from '../Panel.jsx'
 import ProjectionForm from './ProjectionForm.jsx'
-import styles from '../../../styles/budget/assets/AssetsPanel.module.css'
+import styles from '../../../styles/budget/PanelList.module.css'
 
 function AssetsPanel({ budgetId, assets, onAdd, onReplace, onRemove, version }) {
   async function handleAdd(body) {
