@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../../../api.js'
+import { useFetch } from '../../../hooks/useFetch.js'
 import { useRequest } from '../../../hooks/useRequest.js'
 import BudgetEditForm from './BudgetEditForm.jsx'
 import BudgetSelector from './BudgetSelector.jsx'
@@ -9,23 +9,11 @@ import styles from '../../../styles/budget/header/BudgetHeader.module.css'
 import buttons from '../../../styles/shared/Buttons.module.css'
 
 function BudgetHeader({ budget, onBudgetChange }) {
-  const [budgets, setBudgets] = useState(null)
+  // If this fails, budgets stays null and the selector is hidden
+  const { data: budgets, setData: setBudgets } = useFetch('/budgets')
   const [editing, setEditing] = useState(false)
   const { busy, error, send } = useRequest()
   const navigate = useNavigate()
-
-  // If this fails, budgets stays null and the selector is hidden
-  useEffect(() => {
-    let ignore = false
-    apiFetch('/budgets').then(res => {
-      if (!ignore && res.ok) {
-        setBudgets(res.data)
-      }
-    })
-    return () => {
-      ignore = true
-    }
-  }, [])
 
   function handleSaved(data) {
     onBudgetChange({
