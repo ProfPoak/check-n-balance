@@ -63,6 +63,12 @@ describe('logged out', () => {
     await userEvent.setup().click(await nav().findByRole('link', { name: 'Signup' }))
     expect(await heading()).toBe('Signup')
   })
+
+  it("shows the Check'N Balance name, which opens /login", async () => {
+    renderAt('/nonsense', { 'GET /api/check_session': LOGGED_OUT })
+    await userEvent.setup().click(await nav().findByRole('link', { name: "Check'N Balance" }))
+    expect(await heading()).toBe('Login')
+  })
 })
 
 describe('logged in', () => {

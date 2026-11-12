@@ -37,6 +37,7 @@ function NavBar() {
         </>
       ) : (
         <>
+          <Link to="/login" className={styles.brand}>Check'N Balance</Link>
           <Link to="/login" className={`${styles.link} ${styles.pushRight}`}>Login</Link>
           <Link to="/signup" className={styles.link}>Signup</Link>
         </>
