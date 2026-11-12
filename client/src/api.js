@@ -14,8 +14,11 @@ export async function apiFetch(path, options = {}) {
     return { ok: false, status: 0, data: { error: 'Could not reach the server' } }
   }
 
-  const data = await res.json()
+  let data = await res.json()
     .catch(() => null)
+  if (!res.ok && data === null && [502, 503, 504].includes(res.status)) {
+    data = { error: 'Could not reach the server' }
+  }
 
   return { ok: res.ok, status: res.status, data }
 }

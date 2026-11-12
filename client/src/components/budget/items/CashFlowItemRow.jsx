@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { apiFetch } from '../../../api.js'
+import { useBusy } from '../../../hooks/useBusy.js'
 import { formatDate, formatMoney } from '../../../utils/format.js'
 import { recurrenceLabel } from '../../../utils/recurrence.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
@@ -10,6 +11,7 @@ import buttons from '../../../styles/shared/Buttons.module.css'
 function CashFlowItemRow({ item, onReplace, onRemove }) {
   const [editing, setEditing] = useState(false)
   const [error, setError] = useState(null)
+  const [busy, whileBusy] = useBusy()
 
   async function handleSave(body) {
     const res = await apiFetch(`/cash_flow_items/${item.id}`, { method: 'PATCH', body })
@@ -22,7 +24,7 @@ function CashFlowItemRow({ item, onReplace, onRemove }) {
 
   async function handleDelete() {
     setError(null)
-    const res = await apiFetch(`/cash_flow_items/${item.id}`, { method: 'DELETE' })
+    const res = await whileBusy(() => apiFetch(`/cash_flow_items/${item.id}`, { method: 'DELETE' }))
     if (res.ok) {
       onRemove(item.id)
     }
@@ -53,7 +55,7 @@ function CashFlowItemRow({ item, onReplace, onRemove }) {
       <span className={styles.detail}> {formatDate(item.start_date)}</span>
       {item.end_date && <span className={styles.detail}> until {formatDate(item.end_date)}</span>}
       <button className={`${buttons.small} ${styles.edit}`} aria-label={`Edit ${item.name}`} onClick={() => setEditing(true)}>Edit</button>
-      <button className={`${buttons.small} ${buttons.danger} ${styles.delete}`} aria-label={`Delete ${item.name}`} onClick={handleDelete}>Delete</button>
+      <button className={`${buttons.small} ${buttons.danger} ${styles.delete}`} aria-label={`Delete ${item.name}`} onClick={handleDelete} disabled={busy}>Delete</button>
       <ErrorMessage data={error} />
     </li>
   )

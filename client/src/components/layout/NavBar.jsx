@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
+import { useBusy } from '../../hooks/useBusy.js'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
 import styles from '../../styles/layout/NavBar.module.css'
 
@@ -8,10 +9,11 @@ function NavBar() {
   const { user, checkingSession, logout } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState(null)
+  const [busy, whileBusy] = useBusy()
 
   async function handleLogout() {
     setError(null)
-    const res = await logout()
+    const res = await whileBusy(logout)
     if (res.ok) {
       navigate('/login')
     }
@@ -30,7 +32,7 @@ function NavBar() {
         <>
           <Link to="/" className={styles.brand}>Check'N Balance</Link>
           <span className={`${styles.email} ${styles.pushRight}`}>{user.email}</span>
-          <button onClick={handleLogout}>Log out</button>
+          <button onClick={handleLogout} disabled={busy}>Log out</button>
           <ErrorMessage data={error} />
         </>
       ) : (
