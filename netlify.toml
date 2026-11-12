@@ -1,0 +1,23 @@
+# Netlify: builds the React client. The Flask API runs on Render (see render.yaml).
+[build]
+  base = "client"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# The browser only ever talks to Netlify: /api/* is proxied to Render with the /api prefix
+# dropped (like the Vite dev proxy). The session cookie stays first-party and no CORS is needed.
+# Replace the host with your Render service's URL if it differs.
+[[redirects]]
+  from = "/api/*"
+  to = "https://check-n-balance-api.onrender.com/:splat"
+  status = 200
+  force = true
+
+# Client-side routes (/budgets/5, /login...) load the app instead of a 404
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
