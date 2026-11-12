@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { apiFetch } from '../../api.js'
+import { useFetch } from '../../hooks/useFetch.js'
 import AssetsPanel from './assets/AssetsPanel.jsx'
 import BudgetHeader from './header/BudgetHeader.jsx'
 import CashFlowItemsPanel from './items/CashFlowItemsPanel.jsx'
@@ -11,102 +11,30 @@ import ErrorMessage from '../shared/ErrorMessage.jsx'
 import styles from '../../styles/budget/BudgetView.module.css'
 
 function BudgetView({ id }) {
-  const [budget, setBudget] = useState(null)
-  const [items, setItems] = useState([])
-  const [assets, setAssets] = useState([])
-  const [error, setError] = useState(null)
-  const [timeline, setTimeline] = useState(null)
-  const [timelineError, setTimelineError] = useState(null)
-  const [monthly, setMonthly] = useState(null)
-  const [monthlyError, setMonthlyError] = useState(null)
+  const { data: budget, error, setData: setBudget } = useFetch(`/budgets/${id}`)
+  // Bumped after every change, so the server-computed timeline and monthly refetch
   const [version, setVersion] = useState(0)
+  const { data: timeline, error: timelineError } = useFetch(`/budgets/${id}/timeline`, version)
+  const { data: monthly, error: monthlyError } = useFetch(`/budgets/${id}/monthly`, version)
 
-  useEffect(() => {
-    let ignore = false
-    apiFetch(`/budgets/${id}`).then(res => {
-      if (ignore) return
-      if (res.ok) {
-        const { cash_flow_items, assets: budgetAssets, ...budgetFields } = res.data
-        setBudget(budgetFields)
-        setItems(cash_flow_items)
-        setAssets(budgetAssets)
-      }
-      else {
-        setError(res.data ?? {})
-      }
-    })
-    return () => {
-      ignore = true
-    }
-  }, [id])
-
-  useEffect(() => {
-    let ignore = false
-    apiFetch(`/budgets/${id}/timeline`).then(res => {
-      if (ignore) return
-      if (res.ok) {
-        setTimeline(res.data)
-        setTimelineError(null)
-      }
-      else {
-        setTimelineError(res.data ?? {})
-      }
-    })
-
-    apiFetch(`/budgets/${id}/monthly`).then(res => {
-      if (ignore) return
-      if (res.ok) {
-        setMonthly(res.data)
-        setMonthlyError(null)
-      }
-      else {
-        setMonthlyError(res.data ?? {})
-      }
-    })
-
-    return () => {
-      ignore = true
-    }
-  }, [id, version])
-
-  function refresh() {
+  function change(update) {
+    setBudget(update)
     setVersion((v) => v + 1)
   }
 
-  function addItem(item) {
-    setItems((list) => [...list, item])
-    refresh()
+  function changeList(key, fn) {
+    change((b) => ({ ...b, [key]: fn(b[key]) }))
   }
 
-  function replaceItem(item) {
-    setItems((list) => list.map((i) => (i.id === item.id ? item : i)))
-    refresh()
-  }
+  const addItem = (item) => changeList('cash_flow_items', (list) => [...list, item])
+  const replaceItem = (item) => changeList('cash_flow_items', (list) => list.map((i) => (i.id === item.id ? item : i)))
+  const removeItem = (itemId) => changeList('cash_flow_items', (list) => list.filter((i) => i.id !== itemId))
 
-  function removeItem(itemId) {
-    setItems((list) => list.filter((i) => i.id !== itemId))
-    refresh()
-  }
+  const addAsset = (asset) => changeList('assets', (list) => [...list, asset])
+  const replaceAsset = (asset) => changeList('assets', (list) => list.map((a) => (a.id === asset.id ? asset : a)))
+  const removeAsset = (assetId) => changeList('assets', (list) => list.filter((a) => a.id !== assetId))
 
-  function addAsset(asset) {
-    setAssets((list) => [...list, asset])
-    refresh()
-  }
-
-  function replaceAsset(asset) {
-    setAssets((list) => list.map((a) => (a.id === asset.id ? asset : a)))
-    refresh()
-  }
-
-  function removeAsset(assetId) {
-    setAssets((list) => list.filter((a) => a.id !== assetId))
-    refresh()
-  }
-
-  function changeBudget(next) {
-    setBudget(next)
-    refresh()
-  }
+  const changeBudget = (fields) => change((b) => ({ ...b, ...fields }))
 
   if (error) {
     return (
@@ -130,7 +58,7 @@ function BudgetView({ id }) {
         <div className={styles.column}>
           <CashFlowItemsPanel
             budgetId={budget.id}
-            items={items}
+            items={budget.cash_flow_items}
             onAdd={addItem}
             onReplace={replaceItem}
             onRemove={removeItem}
@@ -145,7 +73,7 @@ function BudgetView({ id }) {
           <MonthlyPanel monthly={monthly} error={monthlyError} />
           <AssetsPanel
             budgetId={budget.id}
-            assets={assets}
+            assets={budget.assets}
             onAdd={addAsset}
             onReplace={replaceAsset}
             onRemove={removeAsset}

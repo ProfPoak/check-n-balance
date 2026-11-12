@@ -6,7 +6,7 @@ import App from '../../App.jsx'
 import { AuthProvider } from '../../context/AuthContext.jsx'
 import { formatDate } from '../../utils/format.js'
 import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from '../fixtures.js'
-import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
+import { callsTo, DEMO, held, mockFetch } from '../mockFetch.js'
 
 // A US time zone, so a UTC date bug would show the day before
 globalThis.process.env.TZ = 'America/Denver'
@@ -94,6 +94,32 @@ describe('the projection form', () => {
   it('Calculate All sends GET /budgets/:id/projection?to=<date> once', async () => {
     const { fetchMock } = await withResult()
     expect(callsTo(fetchMock, TO_DEC_31)).toHaveLength(1)
+  })
+})
+
+describe('Calculate All while the request is in flight', () => {
+  const calc = () => panel().getByRole('button', { name: 'Calculate All' })
+
+  it('is disabled (one request), and comes back with the result', async () => {
+    const answer = held()
+    const { fetchMock, user } = await calculate({ [TO_DEC_31]: answer.route })
+    await waitFor(() => expect(calc().disabled).toBe(true))
+    await user.click(calc())
+    expect(callsTo(fetchMock, TO_DEC_31)).toHaveLength(1)
+
+    answer.release(200, PROJECTION)
+    await panel().findByText(AS_OF)
+    expect(calc().disabled).toBe(false)
+  })
+
+  it('comes back after a failure', async () => {
+    const answer = held()
+    await calculate({ [TO_DEC_31]: answer.route })
+    await waitFor(() => expect(calc().disabled).toBe(true))
+
+    answer.release('down')
+    await waitFor(() => expect(calc().disabled).toBe(false))
+    expect(panel().getByRole('alert').textContent).toContain('Could not reach the server')
   })
 })
 

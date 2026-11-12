@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { apiFetch } from '../../../api.js'
+import { useRequest } from '../../../hooks/useRequest.js'
 import { formatDate, formatMoney } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/assets/ProjectionForm.module.css'
@@ -8,27 +8,20 @@ import styles from '../../../styles/budget/assets/ProjectionForm.module.css'
 function ProjectionForm({ budgetId }) {
   const [to, setTo] = useState('')
   const [result, setResult] = useState(null)
-  const [error, setError] = useState(null)
+  const { busy, error, send } = useRequest()
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(null)
     // A blank date is still sent (as "?to=") so the server returns its message
-    const res = await apiFetch(`/budgets/${budgetId}/projection?to=${to}`)
-    if (res.ok) {
-      setResult(res.data)
-    }
-    else {
-      setResult(null)
-      setError(res.data ?? {})
-    }
+    const res = await send(`/budgets/${budgetId}/projection?to=${to}`)
+    setResult(res.ok ? res.data : null)
   }
 
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <label htmlFor="project-to">Project to</label>
       <input id="project-to" type="date" value={to} onChange={(e) => setTo(e.target.value)} />
-      <button type="submit">Calculate All</button>
+      <button type="submit" disabled={busy}>Calculate All</button>
       <ErrorMessage data={error} />
 
       {result && (

@@ -1,0 +1,15 @@
+/* <main> is a stretching flex column, so without this the button spans the window */
+.message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-5);
+}
+
+.loading {
+  color: var(--color-muted);
+}

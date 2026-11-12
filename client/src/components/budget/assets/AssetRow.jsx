@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { apiFetch } from '../../../api.js'
+import { useRequest } from '../../../hooks/useRequest.js'
 import { formatMoney } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import AssetForm from './AssetForm.jsx'
@@ -8,25 +8,17 @@ import buttons from '../../../styles/shared/Buttons.module.css'
 
 function AssetRow({ asset, onReplace, onRemove }) {
   const [editing, setEditing] = useState(false)
-  const [error, setError] = useState(null)
+  const { busy, error, send } = useRequest()
 
-  async function handleSave(body) {
-    const res = await apiFetch(`/assets/${asset.id}`, { method: 'PATCH', body })
-    if (res.ok) {
-      onReplace(res.data)
-      setEditing(false)
-    }
-    return res
+  function handleSaved(saved) {
+    onReplace(saved)
+    setEditing(false)
   }
 
   async function handleDelete() {
-    setError(null)
-    const res = await apiFetch(`/assets/${asset.id}`, { method: 'DELETE' })
+    const res = await send(`/assets/${asset.id}`, { method: 'DELETE' })
     if (res.ok) {
       onRemove(asset.id)
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 
@@ -36,7 +28,9 @@ function AssetRow({ asset, onReplace, onRemove }) {
         <AssetForm
           initial={asset}
           submitLabel="Save"
-          onSubmit={handleSave}
+          method="PATCH"
+          path={`/assets/${asset.id}`}
+          onSaved={handleSaved}
           onCancel={() => setEditing(false)}
         />
       </li>
@@ -48,7 +42,7 @@ function AssetRow({ asset, onReplace, onRemove }) {
       <strong className={styles.name}>{asset.name}</strong>
       <span className={`${styles.balance} ${Number(asset.balance) < 0 ? styles.negative : ''}`}> {formatMoney(asset.balance)}</span>
       <button className={buttons.small} aria-label={`Edit ${asset.name}`} onClick={() => setEditing(true)}>Edit</button>
-      <button className={`${buttons.small} ${buttons.danger}`} aria-label={`Delete ${asset.name}`} onClick={handleDelete}>Delete</button>
+      <button className={`${buttons.small} ${buttons.danger}`} aria-label={`Delete ${asset.name}`} onClick={handleDelete} disabled={busy}>Delete</button>
       <ErrorMessage data={error} />
     </li>
   )

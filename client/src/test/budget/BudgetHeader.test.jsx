@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import App from '../../App.jsx'
 import { AuthProvider } from '../../context/AuthContext.jsx'
 import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from '../fixtures.js'
-import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
+import { callsTo, DEMO, held, mockFetch } from '../mockFetch.js'
 
 // The whole app at `path`, logged in, with the demo's three budgets
 function renderAt(path, routes = {}) {
@@ -209,5 +209,30 @@ describe('deleting the budget', () => {
 
     expect((await screen.findByRole('alert')).textContent).toContain('Forbidden')
     await waitFor(() => expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Current'))
+  })
+
+  it('Delete budget is disabled while the DELETE is in flight (one request), and comes back after a failure', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    const del = held()
+    const { fetchMock } = renderAt('/budgets/1', { 'DELETE /api/budgets/1': del.route })
+    const user = userEvent.setup()
+    await title('Current')
+
+    await user.click(button('Delete budget'))
+    await waitFor(() => expect(button('Delete budget').disabled).toBe(true))
+    await user.click(button('Delete budget'))
+    expect(callsTo(fetchMock, 'DELETE /api/budgets/1')).toHaveLength(1)
+
+    del.release(500, { error: 'Boom' })
+    await waitFor(() => expect(button('Delete budget').disabled).toBe(false))
+    expect(screen.getByRole('alert').textContent).toContain('Boom')
+  })
+
+  it('Cancel on the confirm leaves Delete budget enabled', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false)
+    renderAt('/budgets/1')
+    await title('Current')
+    await userEvent.setup().click(button('Delete budget'))
+    expect(button('Delete budget').disabled).toBe(false)
   })
 })

@@ -1,48 +1,21 @@
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiFetch } from '../api.js'
 import BudgetList from '../components/home/BudgetList.jsx'
 import ErrorMessage from '../components/shared/ErrorMessage.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import styles from '../styles/pages/HomePage.module.css'
+import { useFetch } from '../hooks/useFetch.js'
+import { useRequest } from '../hooks/useRequest.js'
 
 function HomePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [budgets, setBudgets] = useState(null)
-  const [error, setError] = useState(null)
-  const [creating, setCreating] = useState(false)
-
-  useEffect(() => {
-    let ignore = false
-    apiFetch('/budgets')
-    .then(res => {
-      if (ignore) {
-        return
-      }
-      if (res.ok) {
-        setBudgets(res.data)
-      }
-      else {
-        setError(res.data ?? {})
-      }
-    })
-
-    return () => {
-      ignore = true
-    }
-  }, [])
+  const { data: budgets, error: loadError } = useFetch('/budgets')
+  const { busy, error, send } = useRequest()
 
   async function handleNew() {
-    setError(null)
-    setCreating(true)
-    const res = await apiFetch('/budgets', { method: 'POST', body: {} })
-    setCreating(false)
+    const res = await send('/budgets', { method: 'POST', body: {} })
     if (res.ok) {
       navigate(`/budgets/${res.data.id}`)
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 
@@ -54,16 +27,16 @@ function HomePage() {
         so you can see where your money is headed.
       </p>
 
-      <button className={styles.newButton} onClick={handleNew} disabled={creating}>
+      <button className={styles.newButton} onClick={handleNew} disabled={busy}>
         Start new budget
         <span className={styles.plus} aria-hidden="true"></span>
       </button>
-      <ErrorMessage data={error} />
+      <ErrorMessage data={error ?? loadError} />
 
       {budgets ? (
         <BudgetList budgets={budgets} />
       ) : (
-        !error && <p className={styles.loading}>Loading budgets...</p>
+        !loadError && <p className={styles.loading}>Loading budgets...</p>
       )}
     </div>
   )

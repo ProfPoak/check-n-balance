@@ -15,22 +15,39 @@ export function mockFetch(routes) {
     if (route === 'down') return Promise.reject(new TypeError('Failed to fetch'))
     if (typeof route === 'function') return route()
 
-    const [status, body] = route
-    if (body === null || status === 204) return Promise.resolve(new Response(null, { status }))
-    if (typeof body === 'string') {
-      return Promise.resolve(
-        new Response(body, { status, headers: { 'Content-Type': 'text/plain' } }),
-      )
-    }
-    return Promise.resolve(
-      new Response(JSON.stringify(body), {
-        status,
-        headers: { 'Content-Type': 'application/json' },
-      }),
-    )
+    return Promise.resolve(respond(...route))
   })
   vi.stubGlobal('fetch', fetchMock)
   return fetchMock
+}
+
+function respond(status, body) {
+  if (body === null || status === 204) return new Response(null, { status })
+  if (typeof body === 'string') {
+    return new Response(body, { status, headers: { 'Content-Type': 'text/plain' } })
+  }
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
+
+// A response held open until the test lets it go, to check what the UI does mid-request.
+//   const del = held()
+//   mockFetch({ 'DELETE /api/assets/1': del.route })
+//   ...click...  expect the button disabled
+//   del.release(403, { error: 'Forbidden' })   or   del.release('down')
+export function held() {
+  let resolve, reject
+  const promise = new Promise((res, rej) => {
+    resolve = res
+    reject = rej
+  })
+  return {
+    route: () => promise,
+    release: (status, body) =>
+      status === 'down' ? reject(new TypeError('Failed to fetch')) : resolve(respond(status, body)),
+  }
 }
 
 // The calls made to one route, e.g. callsTo(fetchMock, 'POST /api/login')

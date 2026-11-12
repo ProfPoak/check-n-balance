@@ -1,29 +1,22 @@
 import { useState } from 'react'
-import { apiFetch } from '../../../api.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/header/BudgetEditForm.module.css'
+import { useRequest } from '../../../hooks/useRequest.js'
 
 function BudgetEditForm({ budget, onSaved, onCancel, className }) {
   const [title, setTitle] = useState(budget.title)
   const [description, setDescription] = useState(budget.description ?? '')
   const [balanceAsOf, setBalanceAsOf] = useState(budget.balance_as_of)
-  const [error, setError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  const { busy, error, send } = useRequest()
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(null)
-    setSaving(true)
-    const res = await apiFetch(`/budgets/${budget.id}`, {
+    const res = await send(`/budgets/${budget.id}`, {
       method: 'PATCH',
       body: { title, description, balance_as_of: balanceAsOf },
     })
-    setSaving(false)
     if (res.ok) {
       onSaved(res.data)
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 
@@ -41,7 +34,7 @@ function BudgetEditForm({ budget, onSaved, onCancel, className }) {
         Balance as of
         <input type="date" value={balanceAsOf} onChange={(e) => setBalanceAsOf(e.target.value)} />
       </label>
-      <button type="submit" disabled={saving}>Save</button>
+      <button type="submit" disabled={busy}>Save</button>
       <button type="button" onClick={onCancel}>Cancel</button>
       <ErrorMessage data={error} />
     </form>

@@ -111,7 +111,8 @@ describe('when the budget does not load', () => {
     ['404', [404, { error: 'Budget not found' }], 'Budget not found'],
     ['403', [403, { error: 'Forbidden' }], 'Forbidden'],
     ['Flask down', 'down', 'Could not reach the server'],
-    ['a 502 with no JSON', [502, 'Bad Gateway'], 'Something went wrong'],
+    ['Flask down behind Vite (a 502 with a text body)', [502, 'Bad Gateway'], 'Could not reach the server'],
+    ['a 500 with no JSON', [500, 'Internal Server Error'], 'Something went wrong'],
   ])('%s shows the error, not Loading or a heading', async (_, route, message) => {
     renderAt('/budgets/1', { 'GET /api/budgets/1': route })
     expect((await screen.findByRole('alert')).textContent).toContain(message)

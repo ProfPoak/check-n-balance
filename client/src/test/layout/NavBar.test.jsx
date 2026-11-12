@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import App from '../../App.jsx'
 import { AuthProvider } from '../../context/AuthContext.jsx'
 import { CURRENT, scheduleRoutes } from '../fixtures.js'
-import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
+import { callsTo, DEMO, held, mockFetch } from '../mockFetch.js'
 
 const LOGGED_OUT = [401, { error: 'Not logged in' }]
 const LOGGED_IN = [200, DEMO]
@@ -63,6 +63,12 @@ describe('logged out', () => {
     await userEvent.setup().click(await nav().findByRole('link', { name: 'Signup' }))
     expect(await heading()).toBe('Signup')
   })
+
+  it("shows the Check'N Balance name, which opens /login", async () => {
+    renderAt('/nonsense', { 'GET /api/check_session': LOGGED_OUT })
+    await userEvent.setup().click(await nav().findByRole('link', { name: "Check'N Balance" }))
+    expect(await heading()).toBe('Login')
+  })
 })
 
 describe('logged in', () => {
@@ -116,5 +122,25 @@ describe('log out', () => {
     expect(nav().getByRole('button', { name: 'Log out' })).toBeTruthy()
     expect(nav().getByText('demo@example.com')).toBeTruthy()
     await waitFor(() => expect(screen.queryByRole('heading', { name: 'Login' })).toBeNull())
+  })
+
+  it('Log out is disabled while the DELETE is in flight (one request), and comes back after a failure', async () => {
+    const out = held()
+    const fetchMock = renderAt('/', {
+      'GET /api/check_session': LOGGED_IN,
+      'DELETE /api/logout': out.route,
+    })
+    const user = userEvent.setup()
+    const logOut = () => nav().getByRole('button', { name: 'Log out' })
+    await nav().findByRole('button', { name: 'Log out' })
+
+    await user.click(logOut())
+    await waitFor(() => expect(logOut().disabled).toBe(true))
+    await user.click(logOut())
+    expect(callsTo(fetchMock, 'DELETE /api/logout')).toHaveLength(1)
+
+    out.release(500, { error: 'Boom' })
+    await waitFor(() => expect(logOut().disabled).toBe(false))
+    expect(nav().getByText('demo@example.com')).toBeTruthy()
   })
 })

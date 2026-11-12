@@ -1,25 +1,22 @@
 import { useState } from 'react'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/assets/AssetForm.module.css'
+import { useRequest } from '../../../hooks/useRequest.js'
 
-function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
+function AssetForm({ initial, submitLabel, method, path, onSaved, onCancel }) {
   const [name, setName] = useState(initial?.name ?? '')
   const [balance, setBalance] = useState(initial?.balance ?? '')
-  const [error, setError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  const { busy, error, send } = useRequest()
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(null)
-    setSaving(true)
-    const res = await onSubmit({ name, balance })
-    setSaving(false)
-    if (!res.ok) {
-      setError(res.data ?? {})
-    }
-    else if (!initial) {
-      setName('')
-      setBalance('')
+    const res = await send(path, { method, body: { name, balance } })
+    if (res.ok) {
+      onSaved(res.data)
+      if (!initial) {
+        setName('')
+        setBalance('')
+      }
     }
   }
 
@@ -35,7 +32,7 @@ function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
         <input type="number" step="0.01" value={balance} onChange={(e) => setBalance(e.target.value)} />
       </label>
       
-      <button type="submit" disabled={saving}>{submitLabel}</button>
+      <button type="submit" disabled={busy}>{submitLabel}</button>
       {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
       <ErrorMessage data={error} />
     </form>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { PRESETS, recurrenceLabel } from '../../../utils/recurrence.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/items/CashFlowItemForm.module.css'
+import { useRequest } from '../../../hooks/useRequest.js'
 
 const MONTHLY = '1-month'
 
@@ -11,15 +12,14 @@ function keyFor(item) {
   return preset ? preset.key : 'custom'
 }
 
-function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
+function CashFlowItemForm({ initial, submitLabel, method, path, onSaved, onCancel }) {
   const [name, setName] = useState(initial?.name ?? '')
   const [amount, setAmount] = useState(initial?.amount ?? '')
   const [startDate, setStartDate] = useState(initial?.start_date ?? '')
   const [endDate, setEndDate] = useState(initial?.end_date ?? '')
   const [kind, setKind] = useState(initial?.kind ?? 'expense')
   const [recurrence, setRecurrence] = useState(initial ? keyFor(initial) : MONTHLY)
-  const [error, setError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  const { busy, error, send } = useRequest()
 
   // Keep a non-preset recurrence as its own option, so saving an "every 10 days" item
   // doesn't turn it into Monthly
@@ -39,24 +39,24 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(null)
-    setSaving(true)
     const { interval, unit } = options.find((o) => o.key === recurrence)
-    const res = await onSubmit({
-      kind,
-      name,
-      amount,
-      start_date: startDate,
-      end_date: endDate || null,
-      interval,
-      unit,
+    const res = await send(path, {
+      method,
+      body: {
+        kind,
+        name,
+        amount,
+        start_date: startDate,
+        end_date: endDate || null,
+        interval,
+        unit,
+      },
     })
-    setSaving(false)
-    if (!res.ok) {
-      setError(res.data ?? {})
-    }
-    else if (!initial) {
-      reset()
+    if (res.ok) {
+      onSaved(res.data)
+      if (!initial) {
+        reset()
+      }
     }
   }
 
@@ -103,7 +103,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
         </select>
       </label>
 
-      <button type="submit" disabled={saving}>{submitLabel}</button>
+      <button type="submit" disabled={busy}>{submitLabel}</button>
       {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
       <ErrorMessage data={error} />
     </form>

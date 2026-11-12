@@ -6,7 +6,7 @@ import App from '../../App.jsx'
 import { AuthProvider } from '../../context/AuthContext.jsx'
 import { formatDate } from '../../utils/format.js'
 import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from '../fixtures.js'
-import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
+import { callsTo, DEMO, held, mockFetch } from '../mockFetch.js'
 
 // A US time zone, so a UTC date bug would show the day before
 globalThis.process.env.TZ = 'America/Denver'
@@ -368,5 +368,23 @@ describe('deleting an item', () => {
 
     expect((await panel().findByRole('alert')).textContent).toContain('Forbidden')
     expect(panel().getByRole('button', { name: 'Edit Rent' })).toBeTruthy()
+  })
+
+  it('Delete is disabled while the DELETE is in flight (one request), and comes back after a failure', async () => {
+    const del = held()
+    const { fetchMock, user } = renderAt('/budgets/1', { 'DELETE /api/cash_flow_items/2': del.route })
+    await loaded('Current')
+    const deleteRent = () => panel().getByRole('button', { name: 'Delete Rent' })
+
+    await user.click(deleteRent())
+    await waitFor(() => expect(deleteRent().disabled).toBe(true))
+    await user.click(deleteRent())
+    expect(callsTo(fetchMock, 'DELETE /api/cash_flow_items/2')).toHaveLength(1)
+    // Only this row's button
+    expect(panel().getByRole('button', { name: 'Delete Paycheck' }).disabled).toBe(false)
+
+    del.release('down')
+    await waitFor(() => expect(deleteRent().disabled).toBe(false))
+    expect(panel().getByRole('alert').textContent).toContain('Could not reach the server')
   })
 })

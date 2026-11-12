@@ -90,12 +90,12 @@ describe('the session check on load', () => {
     expect(text('error')).toBe('none')
   })
 
-  it('a 502 with a text body (Flask down) is a session error of {}', async () => {
+  it('a 502 with a text body (Flask down) is a session error with the apiFetch message', async () => {
     mockFetch({ 'GET /api/check_session': [502, 'Bad Gateway'] })
     renderProbe()
     await settled()
     expect(text('user')).toBe('none')
-    expect(text('error')).toBe('{}')
+    expect(text('error')).toBe('{"error":"Could not reach the server"}')
   })
 
   it('a 500 with a JSON body keeps that body as the session error', async () => {
@@ -120,7 +120,7 @@ describe('retrySession', () => {
     const fetchMock = mockFetch(routes)
     renderProbe()
     await settled()
-    expect(text('error')).toBe('{}')
+    expect(text('error')).toBe('{"error":"Could not reach the server"}')
 
     routes['GET /api/check_session'] = [200, DEMO]
     await click('retry')
