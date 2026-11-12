@@ -11,9 +11,22 @@ from sqlalchemy import MetaData
 # No override=True: tests set DATABASE_URL before importing this, and it must win over .env
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
+
+def database_url(url):
+    """Render (and Heroku) hand out postgres:// or postgresql:// URLs. SQLAlchemy 2.1 reads
+    a bare postgresql:// as psycopg v3, which isn't installed, so pin the psycopg2 driver."""
+    for prefix in ("postgres://", "postgresql://"):
+        if url.startswith(prefix):
+            return "postgresql+psycopg2://" + url[len(prefix):]
+    return url
+
+
 app = Flask(__name__)
 app.secret_key = os.environ["SECRET_KEY"]
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url(os.environ["DATABASE_URL"])
+# Set SESSION_COOKIE_SECURE=1 in production (HTTPS only); local dev runs on plain http
+app.config["SESSION_COOKIE_SECURE"] = os.environ.get("SESSION_COOKIE_SECURE") == "1"
+app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.json.compact = False
 
