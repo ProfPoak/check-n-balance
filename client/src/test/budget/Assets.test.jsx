@@ -5,7 +5,7 @@ import { MemoryRouter } from 'react-router-dom'
 import App from '../../App.jsx'
 import { AuthProvider } from '../../context/AuthContext.jsx'
 import { CURRENT, scheduleRoutes, summary, UNTITLED, WHAT_IF } from '../fixtures.js'
-import { callsTo, DEMO, mockFetch } from '../mockFetch.js'
+import { callsTo, DEMO, held, mockFetch } from '../mockFetch.js'
 
 // A loan is an asset with a negative balance
 const WITH_LOAN = {
@@ -229,5 +229,23 @@ describe('deleting an asset', () => {
 
     expect((await panel().findByRole('alert')).textContent).toContain('Forbidden')
     expect(panel().getByRole('button', { name: 'Edit Checking' })).toBeTruthy()
+  })
+
+  it('Delete is disabled while the DELETE is in flight (one request), and comes back after a failure', async () => {
+    const del = held()
+    const { fetchMock, user } = renderAt('/budgets/1', { 'DELETE /api/assets/1': del.route })
+    await loaded('Current')
+    const deleteChecking = () => panel().getByRole('button', { name: 'Delete Checking' })
+
+    await user.click(deleteChecking())
+    await waitFor(() => expect(deleteChecking().disabled).toBe(true))
+    await user.click(deleteChecking())
+    expect(callsTo(fetchMock, 'DELETE /api/assets/1')).toHaveLength(1)
+    // Only this row's button
+    expect(panel().getByRole('button', { name: 'Delete Savings' }).disabled).toBe(false)
+
+    del.release(403, { error: 'Forbidden' })
+    await waitFor(() => expect(deleteChecking().disabled).toBe(false))
+    expect(panel().getByRole('alert').textContent).toContain('Forbidden')
   })
 })

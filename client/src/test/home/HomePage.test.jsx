@@ -90,7 +90,7 @@ describe('the budget list', () => {
 
   it('shows the error when GET /budgets fails', async () => {
     renderHome([502, 'Bad Gateway'])
-    expect((await screen.findByRole('alert')).textContent).toContain('Something went wrong')
+    expect((await screen.findByRole('alert')).textContent).toContain('Could not reach the server')
     expect(screen.queryByText(/Loading/)).toBeNull()
   })
 })

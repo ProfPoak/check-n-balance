@@ -94,7 +94,7 @@ describe('while the session check is in flight', () => {
 describe('when the session check fails (Flask down)', () => {
   it.each(['/', '/budgets/1'])('%s shows the error and Try again, not Loading… or the login page', async (path) => {
     renderAt(path, [502, 'Bad Gateway'])
-    expect((await screen.findByRole('alert')).textContent).toContain('Something went wrong')
+    expect((await screen.findByRole('alert')).textContent).toContain('Could not reach the server')
     expect(screen.getByRole('button', { name: 'Try again' })).toBeTruthy()
     expect(screen.queryByText(/Loading/)).toBeNull()
     expect(screen.queryByRole('heading', { name: 'Login' })).toBeNull()

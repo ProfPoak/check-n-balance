@@ -95,10 +95,10 @@ describe('submitting', () => {
     expect((await screen.findByRole('alert')).textContent).toContain('Could not reach the server')
   })
 
-  it('when Flask is down (502 text body), shows "Something went wrong"', async () => {
+  it('when Flask is down (502 text body), shows "Could not reach the server"', async () => {
     await renderLogin({ 'POST /api/login': [502, 'Bad Gateway'] })
     await fillAndSubmit()
-    expect((await screen.findByRole('alert')).textContent).toContain('Something went wrong')
+    expect((await screen.findByRole('alert')).textContent).toContain('Could not reach the server')
   })
 
   it('is not blocked by browser validation (noValidate): a bad email still reaches the server', async () => {

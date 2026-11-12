@@ -76,11 +76,32 @@ describe('the result', () => {
     expect(await apiFetch('/logout')).toEqual({ ok: true, status: 204, data: null })
   })
 
-  it('returns null data for a body that is not JSON', async () => {
+  // Vite's proxy answers 502/503/504 with a text body when Flask is down
+  it.each([502, 503, 504])('turns a %i with a text body into "Could not reach the server"', async (status) => {
     fetchMock.mockResolvedValue(
-      new Response('Bad Gateway', { status: 502, headers: { 'Content-Type': 'text/plain' } }),
+      new Response('Bad Gateway', { status, headers: { 'Content-Type': 'text/plain' } }),
     )
-    expect(await apiFetch('/budgets')).toEqual({ ok: false, status: 502, data: null })
+    expect(await apiFetch('/budgets')).toEqual({
+      ok: false,
+      status,
+      data: { error: 'Could not reach the server' },
+    })
+  })
+
+  it('keeps a JSON body on a 503', async () => {
+    fetchMock.mockResolvedValue(jsonResponse({ error: 'Down for maintenance' }, 503))
+    expect(await apiFetch('/budgets')).toEqual({
+      ok: false,
+      status: 503,
+      data: { error: 'Down for maintenance' },
+    })
+  })
+
+  it('returns null data for any other error body that is not JSON (a 500 HTML page)', async () => {
+    fetchMock.mockResolvedValue(
+      new Response('<h1>Internal Server Error</h1>', { status: 500, headers: { 'Content-Type': 'text/html' } }),
+    )
+    expect(await apiFetch('/budgets')).toEqual({ ok: false, status: 500, data: null })
   })
 
   it('does not throw when fetch itself fails', async () => {
