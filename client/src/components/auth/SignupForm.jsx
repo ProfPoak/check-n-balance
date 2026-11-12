@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
 import styles from '../../styles/auth/AuthForm.module.css'
+import { useBusy } from '../../hooks/useBusy.js'
 
 function SignupForm() {
   const { signup } = useAuth()
@@ -10,7 +11,7 @@ function SignupForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
-  const [submitting, setSubmitting] = useState(false)
+  const [busy, whileBusy] = useBusy()
   const [confirm, setConfirm] = useState('')
 
   async function handleSubmit(e) {
@@ -20,9 +21,7 @@ function SignupForm() {
       setError({error: 'Passwords do not match'})
       return
     }
-    setSubmitting(true)
-    const res = await signup(email, password)
-    setSubmitting(false)
+    const res = await whileBusy(() => signup(email, password))
     if (res.ok) {
       navigate('/')
     }
@@ -43,7 +42,7 @@ function SignupForm() {
       <input type="password" id="confirm-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} />
 
       <ErrorMessage data={error} />
-      <button type="submit" disabled={submitting}>Sign up</button>
+      <button type="submit" disabled={busy}>Sign up</button>
     </form>
   )
 }

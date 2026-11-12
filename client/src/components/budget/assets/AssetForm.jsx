@@ -1,19 +1,18 @@
 import { useState } from 'react'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/assets/AssetForm.module.css'
+import { useBusy } from '../../../hooks/useBusy.js'
 
 function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
   const [name, setName] = useState(initial?.name ?? '')
   const [balance, setBalance] = useState(initial?.balance ?? '')
   const [error, setError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  const [busy, whileBusy] = useBusy()
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
-    setSaving(true)
-    const res = await onSubmit({ name, balance })
-    setSaving(false)
+    const res = await whileBusy(() => onSubmit({ name, balance }))
     if (!res.ok) {
       setError(res.data ?? {})
     }
@@ -35,7 +34,7 @@ function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
         <input type="number" step="0.01" value={balance} onChange={(e) => setBalance(e.target.value)} />
       </label>
       
-      <button type="submit" disabled={saving}>{submitLabel}</button>
+      <button type="submit" disabled={busy}>{submitLabel}</button>
       {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
       <ErrorMessage data={error} />
     </form>

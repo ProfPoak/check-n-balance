@@ -5,13 +5,14 @@ import BudgetList from '../components/home/BudgetList.jsx'
 import ErrorMessage from '../components/shared/ErrorMessage.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import styles from '../styles/pages/HomePage.module.css'
+import { useBusy } from '../hooks/useBusy.js'
 
 function HomePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [budgets, setBudgets] = useState(null)
   const [error, setError] = useState(null)
-  const [creating, setCreating] = useState(false)
+  const [busy, whileBusy] = useBusy()
 
   useEffect(() => {
     let ignore = false
@@ -35,9 +36,7 @@ function HomePage() {
 
   async function handleNew() {
     setError(null)
-    setCreating(true)
-    const res = await apiFetch('/budgets', { method: 'POST', body: {} })
-    setCreating(false)
+    const res = await whileBusy(() => apiFetch('/budgets', { method: 'POST', body: {} }))
     if (res.ok) {
       navigate(`/budgets/${res.data.id}`)
     }
@@ -54,7 +53,7 @@ function HomePage() {
         so you can see where your money is headed.
       </p>
 
-      <button className={styles.newButton} onClick={handleNew} disabled={creating}>
+      <button className={styles.newButton} onClick={handleNew} disabled={busy}>
         Start new budget
         <span className={styles.plus} aria-hidden="true"></span>
       </button>

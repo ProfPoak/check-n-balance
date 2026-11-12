@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ErrorMessage from '../shared/ErrorMessage.jsx'
 import styles from '../../styles/auth/AuthForm.module.css'
+import { useBusy } from '../../hooks/useBusy.js'
 
 function LoginForm() {
   const{ login } = useAuth()
@@ -10,14 +11,12 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
-  const [submitting, setSubmitting] = useState(false)
+  const [busy, whileBusy] = useBusy()
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
-    setSubmitting(true)
-    const res = await login(email, password)
-    setSubmitting(false)
+    const res = await whileBusy(() => login(email, password))
     if (res.ok) {
       navigate('/')
     }
@@ -35,7 +34,7 @@ function LoginForm() {
       <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
       <ErrorMessage data={error} />
-      <button type="submit" disabled={submitting}>Log in</button>
+      <button type="submit" disabled={busy}>Log in</button>
     </form>      
   )
 }

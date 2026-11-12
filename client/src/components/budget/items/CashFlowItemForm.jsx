@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { PRESETS, recurrenceLabel } from '../../../utils/recurrence.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/items/CashFlowItemForm.module.css'
+import { useBusy } from '../../../hooks/useBusy.js'
 
 const MONTHLY = '1-month'
 
@@ -19,7 +20,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
   const [kind, setKind] = useState(initial?.kind ?? 'expense')
   const [recurrence, setRecurrence] = useState(initial ? keyFor(initial) : MONTHLY)
   const [error, setError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  const [busy, whileBusy] = useBusy()
 
   // Keep a non-preset recurrence as its own option, so saving an "every 10 days" item
   // doesn't turn it into Monthly
@@ -40,9 +41,8 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
-    setSaving(true)
     const { interval, unit } = options.find((o) => o.key === recurrence)
-    const res = await onSubmit({
+    const res = await whileBusy(() => onSubmit({
       kind,
       name,
       amount,
@@ -50,8 +50,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
       end_date: endDate || null,
       interval,
       unit,
-    })
-    setSaving(false)
+    }))
     if (!res.ok) {
       setError(res.data ?? {})
     }
@@ -103,7 +102,7 @@ function CashFlowItemForm({ initial, submitLabel, onSubmit, onCancel }) {
         </select>
       </label>
 
-      <button type="submit" disabled={saving}>{submitLabel}</button>
+      <button type="submit" disabled={busy}>{submitLabel}</button>
       {onCancel && <button type="button" onClick={onCancel}>Cancel</button>}
       <ErrorMessage data={error} />
     </form>
