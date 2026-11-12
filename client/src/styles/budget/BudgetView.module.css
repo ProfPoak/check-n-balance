@@ -33,6 +33,7 @@
   min-width: 0;
   border-right: 1px solid var(--color-rule);
   overflow-y: auto;
+  padding-bottom: 80px;
 }
 
 .column:last-child {
@@ -54,6 +55,11 @@
     border-right: none;
     border-bottom: 1px solid var(--color-rule);
     overflow-y: visible;
+    padding-bottom: 0;
+  }
+
+  .column:last-child {
+    padding-bottom: 80px;
   }
 }
 
