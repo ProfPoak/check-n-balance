@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { apiFetch } from '../../../api.js'
-import { useBusy } from '../../../hooks/useBusy.js'
+import { useRequest } from '../../../hooks/useRequest.js'
 import { formatDate, formatMoney } from '../../../utils/format.js'
 import { recurrenceLabel } from '../../../utils/recurrence.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
@@ -10,26 +9,17 @@ import buttons from '../../../styles/shared/Buttons.module.css'
 
 function CashFlowItemRow({ item, onReplace, onRemove }) {
   const [editing, setEditing] = useState(false)
-  const [error, setError] = useState(null)
-  const [busy, whileBusy] = useBusy()
+  const { busy, error, send } = useRequest()
 
-  async function handleSave(body) {
-    const res = await apiFetch(`/cash_flow_items/${item.id}`, { method: 'PATCH', body })
-    if (res.ok) {
-      onReplace(res.data)
-      setEditing(false)
-    }
-    return res
+  function handleSaved(saved) {
+    onReplace(saved)
+    setEditing(false)
   }
 
   async function handleDelete() {
-    setError(null)
-    const res = await whileBusy(() => apiFetch(`/cash_flow_items/${item.id}`, { method: 'DELETE' }))
+    const res = await send(`/cash_flow_items/${item.id}`, { method: 'DELETE' })
     if (res.ok) {
       onRemove(item.id)
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 
@@ -39,7 +29,9 @@ function CashFlowItemRow({ item, onReplace, onRemove }) {
         <CashFlowItemForm
           initial={item}
           submitLabel="Save"
-          onSubmit={handleSave}
+          method="PATCH"
+          path={`/cash_flow_items/${item.id}`}
+          onSaved={handleSaved}
           onCancel={() => setEditing(false)}
         />
       </li>

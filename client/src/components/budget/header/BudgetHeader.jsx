@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { apiFetch } from '../../../api.js'
-import { useBusy } from '../../../hooks/useBusy.js'
+import { useRequest } from '../../../hooks/useRequest.js'
 import BudgetEditForm from './BudgetEditForm.jsx'
 import BudgetSelector from './BudgetSelector.jsx'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
@@ -11,8 +11,7 @@ import buttons from '../../../styles/shared/Buttons.module.css'
 function BudgetHeader({ budget, onBudgetChange }) {
   const [budgets, setBudgets] = useState(null)
   const [editing, setEditing] = useState(false)
-  const [error, setError] = useState(null)
-  const [busy, whileBusy] = useBusy()
+  const { busy, error, send } = useRequest()
   const navigate = useNavigate()
 
   // If this fails, budgets stays null and the selector is hidden
@@ -43,13 +42,9 @@ function BudgetHeader({ budget, onBudgetChange }) {
     if (!window.confirm('Delete this budget?')) {
       return
     }
-    setError(null)
-    const res = await whileBusy(() => apiFetch(`/budgets/${budget.id}`, { method: 'DELETE' }))
+    const res = await send(`/budgets/${budget.id}`, { method: 'DELETE' })
     if (res.ok) {
       navigate('/')
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 

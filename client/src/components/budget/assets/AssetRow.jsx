@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { apiFetch } from '../../../api.js'
-import { useBusy } from '../../../hooks/useBusy.js'
+import { useRequest } from '../../../hooks/useRequest.js'
 import { formatMoney } from '../../../utils/format.js'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import AssetForm from './AssetForm.jsx'
@@ -9,26 +8,17 @@ import buttons from '../../../styles/shared/Buttons.module.css'
 
 function AssetRow({ asset, onReplace, onRemove }) {
   const [editing, setEditing] = useState(false)
-  const [error, setError] = useState(null)
-  const [busy, whileBusy] = useBusy()
+  const { busy, error, send } = useRequest()
 
-  async function handleSave(body) {
-    const res = await apiFetch(`/assets/${asset.id}`, { method: 'PATCH', body })
-    if (res.ok) {
-      onReplace(res.data)
-      setEditing(false)
-    }
-    return res
+  function handleSaved(saved) {
+    onReplace(saved)
+    setEditing(false)
   }
 
   async function handleDelete() {
-    setError(null)
-    const res = await whileBusy(() => apiFetch(`/assets/${asset.id}`, { method: 'DELETE' }))
+    const res = await send(`/assets/${asset.id}`, { method: 'DELETE' })
     if (res.ok) {
       onRemove(asset.id)
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 
@@ -38,7 +28,9 @@ function AssetRow({ asset, onReplace, onRemove }) {
         <AssetForm
           initial={asset}
           submitLabel="Save"
-          onSubmit={handleSave}
+          method="PATCH"
+          path={`/assets/${asset.id}`}
+          onSaved={handleSaved}
           onCancel={() => setEditing(false)}
         />
       </li>

@@ -5,14 +5,13 @@ import BudgetList from '../components/home/BudgetList.jsx'
 import ErrorMessage from '../components/shared/ErrorMessage.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import styles from '../styles/pages/HomePage.module.css'
-import { useBusy } from '../hooks/useBusy.js'
+import { useRequest } from '../hooks/useRequest.js'
 
 function HomePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [budgets, setBudgets] = useState(null)
-  const [error, setError] = useState(null)
-  const [busy, whileBusy] = useBusy()
+  const { busy, error, setError, send } = useRequest()
 
   useEffect(() => {
     let ignore = false
@@ -32,16 +31,12 @@ function HomePage() {
     return () => {
       ignore = true
     }
-  }, [])
+  }, [setError])
 
   async function handleNew() {
-    setError(null)
-    const res = await whileBusy(() => apiFetch('/budgets', { method: 'POST', body: {} }))
+    const res = await send('/budgets', { method: 'POST', body: {} })
     if (res.ok) {
       navigate(`/budgets/${res.data.id}`)
-    }
-    else {
-      setError(res.data ?? {})
     }
   }
 

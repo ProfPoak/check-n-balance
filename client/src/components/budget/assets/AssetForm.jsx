@@ -1,24 +1,22 @@
 import { useState } from 'react'
 import ErrorMessage from '../../shared/ErrorMessage.jsx'
 import styles from '../../../styles/budget/assets/AssetForm.module.css'
-import { useBusy } from '../../../hooks/useBusy.js'
+import { useRequest } from '../../../hooks/useRequest.js'
 
-function AssetForm({ initial, submitLabel, onSubmit, onCancel }) {
+function AssetForm({ initial, submitLabel, method, path, onSaved, onCancel }) {
   const [name, setName] = useState(initial?.name ?? '')
   const [balance, setBalance] = useState(initial?.balance ?? '')
-  const [error, setError] = useState(null)
-  const [busy, whileBusy] = useBusy()
+  const { busy, error, send } = useRequest()
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(null)
-    const res = await whileBusy(() => onSubmit({ name, balance }))
-    if (!res.ok) {
-      setError(res.data ?? {})
-    }
-    else if (!initial) {
-      setName('')
-      setBalance('')
+    const res = await send(path, { method, body: { name, balance } })
+    if (res.ok) {
+      onSaved(res.data)
+      if (!initial) {
+        setName('')
+        setBalance('')
+      }
     }
   }
 
